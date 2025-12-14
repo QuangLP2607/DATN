@@ -1,69 +1,76 @@
-# React + TypeScript + Vite
+# E-Learning Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Frontend
 
-Currently, two official plugins are available:
+### Environment Variables
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Create a `.env` file in the frontend root:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_API_URL=http://localhost:5000/api
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Run
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
+
+---
+
+## Backend
+
+### Requirements
+
+* Node.js
+* MongoDB (local or remote)
+
+### Environment Variables
+
+Create a `.env` file in the backend root:
+
+```env
+PORT=5000
+
+# Database
+MONGO_URI=mongodb://127.0.0.1:27017/e_learning-DATN
+
+# JWT
+JWT_SECRET=your_access_token_secret_key
+JWT_REFRESH_SECRET=your_refresh_token_secret_key
+JWT_ACCESS_TOKEN_EXPIRES=1d
+JWT_REFRESH_TOKEN_EXPIRES=7d
+
+# App
+NODE_ENV=development
+
+# Jitsi
+JITSI_SECRET=your_jitsi_secret
+JITSI_APP_ID=your_jitsi_app_id
+JITSI_DOMAIN=your_jitsi_domain
+
+# AWS S3
+AWS_REGION=ap-southeast-1
+AWS_ACCESS_KEY_ID=your_aws_access_key_id
+AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+AWS_BUCKET_NAME=your_bucket_name
+AWS_EXPIRES_IN=900
+```
+
+> ⚠️ **Security note**: Do **NOT** commit `.env` files or real secrets to Git. Add `.env` to `.gitignore` and use placeholders like above.
+
+### Run
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+## Notes
+
+* Frontend consumes API from `VITE_API_URL`
+* Backend runs on port `5000`
+* MongoDB must be running before starting backend
