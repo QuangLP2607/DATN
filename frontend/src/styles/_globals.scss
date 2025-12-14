@@ -1,0 +1,84 @@
+@use "./variables" as vars;
+
+// Global Reset
+* {
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 62.5%;
+  color-scheme: light dark;
+}
+
+body {
+  background-color: var(--color-bg-default);
+  font-family: vars.$font-primary;
+  color: var(--color-text-primary);
+  font-size: 1.4rem;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  > * {
+    flex: 1;
+  }
+}
+
+//-------- Reset styles for common elements --------
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(0.97);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+input {
+  outline: none;
+}
+
+select {
+  outline: none;
+}
+
+// ------------ Custom Scrollbar ------------
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #9b9b9b;
+}

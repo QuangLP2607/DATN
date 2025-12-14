@@ -1,0 +1,25 @@
+.wrapper {
+  flex: 1;
+  display: flex;
+  min-height: 100vh;
+
+  &__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+.main-container {
+  flex: 1;
+  position: relative;
+  @include mixins.flex(row, center, center);
+}
+
+.main {
+  max-width: 1600px;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}

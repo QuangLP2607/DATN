@@ -1,0 +1,103 @@
+@use "sass:list";
+
+$alert-colors: (
+  success: (
+    #77bd59,
+    #ecf5e7,
+  ),
+  error: (
+    #dc4446,
+    #f9e0e0,
+  ),
+  warning: (
+    #f0ad4e,
+    #fff4e5,
+  ),
+);
+
+.alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  width: 350px;
+  padding: 5px 5px 10px 5px;
+  border: 1px solid;
+  border-radius: 5px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(-20px);
+  opacity: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  gap: 5px;
+
+  @each $type, $colors in $alert-colors {
+    &.#{$type} {
+      background-color: list.nth($colors, 2);
+      color: list.nth($colors, 1);
+      border-color: list.nth($colors, 1);
+
+      .close {
+        color: list.nth($colors, 1);
+      }
+
+      .progress {
+        background-color: list.nth($colors, 1);
+      }
+    }
+  }
+
+  &.show {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+
+  &-wrapper {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &-icon {
+    font-size: 24px;
+  }
+
+  &-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  &-content {
+    font-size: 14px;
+  }
+
+  .close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    animation: progress-bar 4s linear forwards;
+  }
+}
+
+@keyframes progress-bar {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}

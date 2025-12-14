@@ -1,0 +1,119 @@
+.right {
+  @include mixins.flex(column, center, center);
+  width: 450px;
+  padding: 50px;
+  background: var(--color-bg-paper);
+}
+
+.form {
+  @include mixins.flex(column, center, center);
+  width: 100%;
+
+  &__logo {
+    @include mixins.flex(row, center, center, 10px);
+    height: 50px;
+    margin-bottom: 40px;
+
+    &-icon {
+      height: 100%;
+    }
+    &-text {
+      height: 100%;
+    }
+  }
+
+  &__title {
+    color: var(--color-text-primary);
+    font-size: 20px;
+    font-weight: normal;
+    white-space: nowrap;
+    margin-bottom: 20px;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+
+    background-color: var(--color-bg-paper);
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-gray-300);
+    margin-bottom: 30px;
+
+    &:focus {
+      border-bottom-color: var(--color-gray-500);
+      outline: none;
+    }
+  }
+
+  &__error {
+    margin-top: 10px;
+    color: #ef4444;
+  }
+
+  &__forgot {
+    width: 100%;
+    color: var(--color-text);
+    font-size: 12px;
+    text-align: right;
+    cursor: pointer;
+    margin-top: -20px;
+
+    &:hover {
+      color: #538f62;
+      text-decoration: underline;
+    }
+  }
+
+  &__btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 99px;
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+    cursor: pointer;
+    margin-top: 40px;
+  }
+
+  &__or {
+    position: relative;
+    width: 50%;
+    margin: 20px 0;
+    color: var(--color-text);
+    font-size: 12px;
+    text-align: center;
+
+    &::before,
+    &::after {
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background-color: var(--color-text);
+      content: "";
+    }
+
+    &::before {
+      left: 0;
+    }
+
+    &::after {
+      right: 0;
+    }
+  }
+
+  &__google {
+    display: flex;
+    color: var(--color-text);
+    font-size: 14px;
+    cursor: pointer;
+    gap: 10px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+    }
+  }
+}

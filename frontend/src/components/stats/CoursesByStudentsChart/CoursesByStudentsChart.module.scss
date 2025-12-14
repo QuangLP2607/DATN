@@ -1,0 +1,45 @@
+.chart-container {
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 16px;
+
+  .title {
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+.chart-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  color: black;
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .color-box {
+      width: 14px;
+      height: 14px;
+      margin-right: 8px;
+      border-radius: 3px;
+    }
+  }
+}
+
+.loading,
+.empty {
+  text-align: center;
+  color: #6b7280;
+  margin-top: 20px;
+}

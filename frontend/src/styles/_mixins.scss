@@ -1,0 +1,63 @@
+@use "sass:color";
+
+// ==================== FLEX ====================
+@mixin flex($direction: row, $justify: center, $align: center, $gap: 0) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+  flex-direction: $direction;
+  gap: $gap;
+}
+
+// ==================== SIZE ====================
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+// ==================== CIRCLE CENTER ====================
+@mixin circle($size) {
+  width: $size;
+  height: $size;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-default);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// ==================== CENTER ABSOLUTE ====================
+@mixin input-base() {
+  width: 100%;
+  border: 1px solid vars(--color-border-default);
+  border-radius: 5px;
+  padding: 10px;
+
+  &:focus {
+    outline: none;
+    border-color: vars(--color-border-focus);
+    box-shadow: 0 0 0 2px vars(--color-accent-primary-light);
+  }
+}
+
+@mixin button-base(
+  $bg-color: var(--color-accent-primary-dark),
+  $text-color: var(--color-text-inverse)
+) {
+  border-radius: 5px;
+  background-color: $bg-color;
+  color: $text-color;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-bg-default), black 5%);
+  }
+
+  &:active {
+    background-color: color-mix(in srgb, var(--color-bg-default), white 5%);
+  }
+}

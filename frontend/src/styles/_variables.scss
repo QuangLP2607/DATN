@@ -1,0 +1,114 @@
+// ================= Fonts =================
+$font-primary: "Roboto", sans-serif;
+$font-secondary: "Noto Sans JP", sans-serif;
+
+// ================= Light Theme =================
+$theme-light: (
+  // Accents
+  accent-primary: #c4fbb8,
+  accent-primary-light: #e1ffda,
+  accent-primary-dark: #36912d,
+  accent-primary-darker: #366544,
+
+  // Backgrounds
+  bg-default: #f5f5f5,
+  bg-paper: #ffffff,
+  bg-muted: #f2f2f2,
+  bg-overlay: rgba(0, 0, 0, 0.5),
+  // Text
+  text-primary: #303030,
+  text-secondary: #5a5a5a,
+  text-tertiary: #8c8c8c,
+  text-inverse: #ffffff,
+
+  // Borders
+  border-default: #d9d9d9,
+  border-muted: #d6d6d8,
+  border-focus: #c8ffbc,
+
+  // Shadows
+  shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1),
+  shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1),
+  shadow-lg: 0 2px 12px rgba(0, 0, 0, 0.1),
+  // Semantic Colors
+  success: #28a745,
+  success-light: #d4edda,
+  // Semantic Colors
+  warning: #ffb526,
+  warning-light: #fff3cd,
+  error: #ff2626,
+  error-light: #f8d7da,
+  info: #2650ff,
+  info-light: #cfe2ff,
+
+  // Grayscale
+  gray-50: #f9f9f9,
+  gray-100: #f2f2f2,
+  gray-200: #e6e6e6,
+  gray-300: #cccccc,
+  gray-400: #b3b3b3,
+  gray-500: #999999,
+  gray-600: #808080,
+  gray-700: #666666,
+  gray-800: #4d4d4d,
+  gray-900: #333333,
+
+  // Brand
+  brand-primary: #40a737,
+  brand-secondary: #c8ffbc,
+  brand-accent: #e1ffda
+);
+
+// ================= Dark Theme =================
+$theme-dark: (
+  // Accents
+  accent-primary: #40a737,
+  accent-primary-light: #6fe26f,
+  accent-primary-dark: #2b7a2b,
+  accent-primary-darker: #1e4d1e,
+
+  // Backgrounds
+  bg-default: #121212,
+  bg-paper: #1e1e1e,
+  bg-muted: #2a2a2a,
+  bg-overlay: rgba(0, 0, 0, 0.7),
+  // Text
+  text-primary: #e0e0e0,
+  text-secondary: #b3b3b3,
+  text-tertiary: #999999,
+  text-inverse: #000000,
+
+  // Borders
+  border-default: #333333,
+  border-muted: #444444,
+  border-focus: #40a737,
+
+  // Shadows
+  shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5),
+  shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5),
+  shadow-lg: 0 2px 12px rgba(0, 0, 0, 0.5),
+  // Semantic Colors
+  warning: #ffb526,
+  warning-light: #fff3cd,
+  error: #ff2626,
+  error-light: #f8d7da,
+  info: #2650ff,
+  info-light: #cfe2ff,
+
+  // Grayscale
+  gray-50: #1a1a1a,
+  gray-100: #222222,
+  gray-200: #2a2a2a,
+  gray-300: #333333,
+  gray-400: #4d4d4d,
+  gray-500: #666666,
+  gray-600: #808080,
+  gray-700: #999999,
+  gray-800: #b3b3b3,
+  gray-900: #e0e0e0,
+
+  // Brand
+  brand-primary: #40a737,
+  brand-secondary: #6fe26f,
+  brand-accent: #1a3e1a
+);

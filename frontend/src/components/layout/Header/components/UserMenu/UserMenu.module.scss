@@ -1,0 +1,56 @@
+.avatar {
+  position: relative;
+  @include mixins.circle(40px);
+  background-color: vars(--color-bg-default);
+  cursor: pointer;
+
+  &-icon {
+    font-size: 24px;
+    color: var(--color-text-secondary);
+  }
+
+  &-img {
+    @include mixins.circle(40px);
+    object-fit: cover;
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 1;
+    width: 150px;
+    padding: 1px;
+    border: 1px solid var(--color-border-default);
+    border-radius: 4px;
+    background-color: var(--color-bg-paper);
+
+    &-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--color-text-primary);
+
+      &:hover {
+        background-color: var(--color-bg-muted);
+      }
+    }
+
+    /* Triangle decoration */
+    &::before {
+      position: absolute;
+      top: -8px;
+      right: 8px;
+      width: 20px;
+      height: 8px;
+      z-index: -100px;
+      background: var(--color-border-default);
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      content: "";
+    }
+  }
+}

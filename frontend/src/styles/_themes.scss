@@ -1,0 +1,21 @@
+@use "./variables" as vars;
+
+:root {
+  @each $key, $value in vars.$theme-light {
+    --color-#{$key}: #{$value};
+  }
+}
+
+html[data-theme="dark"] {
+  @each $key, $value in vars.$theme-dark {
+    --color-#{$key}: #{$value};
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    @each $key, $value in vars.$theme-dark {
+      --color-#{$key}: #{$value};
+    }
+  }
+}

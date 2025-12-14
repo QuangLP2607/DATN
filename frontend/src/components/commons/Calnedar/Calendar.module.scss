@@ -1,0 +1,223 @@
+.calendar {
+  width: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  max-width: 1000px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color-main-bg);
+    padding: 15px 20px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+
+    &__nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 5px;
+      gap: 1px;
+      overflow: hidden;
+
+      &-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        border: none;
+
+        background: var(--color-bg);
+        color: var(--color-text);
+        cursor: pointer;
+
+        &.left,
+        &.right {
+          width: 30px;
+        }
+
+        &.today {
+          padding: 0 20px;
+        }
+      }
+    }
+
+    &__date {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    &__mode {
+      display: flex;
+      gap: 5px;
+
+      &-btn {
+        padding: 6px 12px;
+        border-radius: 5px;
+
+        background: var(--color-surface);
+        color: var(--color-text);
+
+        &.active {
+          background: #4caf50;
+          color: white;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+.view-mode-buttons {
+  display: flex;
+  gap: 8px;
+}
+.view-mode-buttons .week-view {
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+.week-days-header {
+  display: grid;
+  background: #fafafa;
+  border-bottom: 2px solid #e0e0e0;
+  grid-template-columns: 60px repeat(7, 1fr);
+}
+.day-cell {
+  padding: 15px 10px;
+  text-align: center;
+  border-left: 1px solid #e0e0e0;
+}
+.day-label {
+  color: #666;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+.day-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+  border-radius: 50%;
+  color: #333;
+  font-size: 20px;
+}
+.day-number.today {
+  background-color: #e8f5e9;
+  color: #4caf50;
+  font-weight: bold;
+}
+.week-time-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 60px repeat(7, 1fr);
+}
+.time-column .time-cell {
+  height: 80px;
+  padding: 5px;
+  color: #666;
+  font-size: 12px;
+  text-align: right;
+  border-top: 1px solid #e0e0e0;
+}
+.day-column {
+  position: relative;
+  border-left: 1px solid #e0e0e0;
+}
+.day-column.today {
+  background-color: #f0f8ff;
+}
+.hour-cell {
+  height: 80px;
+  border-top: 1px solid #e0e0e0;
+}
+.event {
+  position: absolute;
+  right: 4px;
+  left: 4px;
+  z-index: 10;
+  padding: 8px;
+  border-radius: 4px;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.event-time {
+  font-size: 11px;
+  font-weight: bold;
+}
+.event-title {
+  font-weight: bold;
+  margin-top: 4px;
+}
+.month-view {
+  padding: 20px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+.month-days-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 10px;
+}
+.month-day-label {
+  padding: 10px;
+  color: #666;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+.month-grid {
+  display: grid;
+  background-color: #e0e0e0;
+  gap: 1px;
+  grid-template-columns: repeat(7, 1fr);
+}
+.month-day-cell {
+  position: relative;
+  padding: 8px;
+  background: white;
+  min-height: 100px;
+  overflow: hidden;
+}
+.month-day-cell.otherMonth {
+  opacity: 0.4;
+}
+.month-day-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.month-day-number.today {
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+}
+.month-event {
+  padding: 4px 6px;
+  border-radius: 3px;
+  color: white;
+  font-size: 11px;
+  white-space: nowrap;
+  cursor: pointer;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

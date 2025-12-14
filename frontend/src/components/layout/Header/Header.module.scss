@@ -1,0 +1,13 @@
+.header {
+  @include mixins.flex(row, flex-end, center);
+  height: 80px;
+  padding: 0 60px;
+  background-color: var(--color-bg-paper);
+  border-bottom: 1px solid var(--color-border-default);
+
+  &__actions {
+    @include mixins.flex(row, center, center, 30px);
+    height: 40px;
+    user-select: none;
+  }
+}

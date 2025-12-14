@@ -1,0 +1,48 @@
+.theme-switch {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 50px;
+  height: 26px;
+  padding: 0 4px;
+  border-radius: 50px;
+  background: black;
+  transition: background 0.3s ease;
+  cursor: pointer;
+
+  .icon {
+    position: absolute;
+    top: 50%;
+    font-size: 14px;
+    transition: opacity 0.2s, transform 0.3s;
+    transform: translateY(-50%);
+
+    &-sun {
+      left: 6px;
+      color: black;
+    }
+
+    &-moon {
+      right: 6px;
+      color: white;
+    }
+  }
+
+  .thumb {
+    z-index: 2;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: white;
+    transition: transform 0.3s ease;
+  }
+
+  &.dark {
+    background: white;
+
+    .thumb {
+      background: black;
+      transform: translateX(24px);
+    }
+  }
+}
