@@ -1,134 +1,121 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import classNames from "classnames/bind";
 import styles from "./Sidebar.module.scss";
 import { Icon } from "@iconify/react";
-import ConfirmModal from "@/components/ConfirmModal";
+import SidebarLogo from "./components/SidebarLogo";
+import Item from "./components/SidebarItem";
+import Overlay from "@/components/ui/Overlay";
 
 const cx = classNames.bind(styles);
 
+/* ================= TYPES ================= */
+export interface DropdownConfig<T> {
+  options: readonly T[];
+  selectedIndex: number;
+  onSelect: (index: number) => void;
+  getLabel: (option: T) => string;
+}
+
 export interface MenuItem {
-  to: string;
-  icon: string;
   label: string;
+  icon?: string;
+  to?: string;
+  items?: MenuItem[];
+  dropdown?: DropdownConfig<unknown>;
 }
 
 export interface MenuGroup {
-  title: string;
+  title?: string;
   items: MenuItem[];
 }
 
 interface SidebarProps {
   menuGroups: MenuGroup[];
   logo?: { small: string; large: string };
-  logout?: () => void;
 }
 
-export default function Sidebar({ menuGroups, logo, logout }: SidebarProps) {
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const location = useLocation();
+/* ================= SIDEBAR ================= */
+export default function Sidebar({ menuGroups, logo }: SidebarProps) {
+  const { pathname } = useLocation();
 
-  const [isExpanded, setIsExpanded] = useState<boolean>(() => {
-    return localStorage.getItem("sidebar-expanded") === "true";
+  const [collapsed, setCollapsed] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem("sidebar-collapsed") !== "false";
+    } catch {
+      return true;
+    }
   });
 
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   useEffect(() => {
-    localStorage.setItem("sidebar-expanded", String(isExpanded));
-  }, [isExpanded]);
+    const checkMobile = () => setIsMobile(window.innerWidth <= 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const toggleSidebar = () => {
-    setIsExpanded((prev) => !prev);
+    setCollapsed((prev) => {
+      localStorage.setItem("sidebar-collapsed", String(!prev));
+      return !prev;
+    });
   };
 
+  const closeSidebar = () => setCollapsed(true);
+
   return (
-    <aside className={cx("sidebar", { expanded: isExpanded })}>
-      {/* Logo */}
-      <Link to="/xxx" className={cx("sidebar__logo")}>
-        {logo && (
-          <>
-            <img
-              src={logo.small}
-              alt="Logo"
-              className={cx("sidebar__logo-img")}
-            />
-            {isExpanded && (
-              <img
-                src={logo.large}
-                alt="Logo"
-                className={cx("sidebar__logo-img")}
-              />
-            )}
-          </>
-        )}
-      </Link>
+    <div className={cx("sidebar-wrapper")}>
+      {/* ================= OVERLAY (mobile only) ================= */}
+      {isMobile && (
+        <Overlay
+          className={cx("sidebar-overlay")}
+          open={!collapsed}
+          onClose={closeSidebar}
+        />
+      )}
 
-      {/* Menu */}
-      <ul className={cx("sidebar__menu")}>
-        {menuGroups.map((group) => (
-          <li key={group.title} className={cx("sidebar__submenu")}>
-            <div className={cx("sidebar__submenu-title")}>
-              <hr className={cx("sidebar__submenu-title-line")} />
-              <span className={cx("sidebar__submenu-title-text")}>
-                {group.title}
-              </span>
-            </div>
-
-            <ul className={cx("sidebar__submenu-list")}>
-              {group.items.map((item) => {
-                const isActive = location.pathname.startsWith(item.to);
-
-                return (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    className={cx("sidebar__submenu-item", {
-                      active: isActive,
-                    })}
-                  >
-                    <Icon icon={item.icon} className={cx("sidebar__icon")} />
-                    <span className={cx("sidebar__content")}>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </ul>
-          </li>
-        ))}
-
-        {logout && (
-          <li
-            className={cx("sidebar__submenu-item", "logout")}
-            onClick={() => setShowLogoutConfirm(true)}
-          >
-            <Icon icon="line-md:logout" className={cx("sidebar__icon")} />
-            <span className={cx("sidebar__content")}>Đăng xuất</span>
-          </li>
-        )}
-      </ul>
-
-      {/* Toggle Button */}
-      <button
-        type="button"
-        className={cx("sidebar__toggle")}
-        onClick={toggleSidebar}
-      >
+      {/* ================= TOGGLE BUTTON ================= */}
+      <button className={cx("sidebar-toggle")} onClick={toggleSidebar}>
         <Icon
+          className={cx("sidebar-toggle-icon")}
           icon={
-            isExpanded ? "line-md:menu-fold-left" : "line-md:menu-fold-right"
+            collapsed ? "line-md:menu-fold-right" : "line-md:menu-fold-left"
           }
         />
       </button>
-      <ConfirmModal
-        open={showLogoutConfirm}
-        title="Xác nhận đăng xuất"
-        message="Bạn có chắc muốn đăng xuất?"
-        confirmText="Đăng xuất"
-        cancelText="Hủy"
-        onCancel={() => setShowLogoutConfirm(false)}
-        onConfirm={() => {
-          logout?.();
-          setShowLogoutConfirm(false);
-        }}
-      />
-    </aside>
+
+      {/* ================= SIDEBAR ================= */}
+      <aside className={cx("sidebar", { collapsed })}>
+        {/* LOGO */}
+        <SidebarLogo logo={logo} collapsed={collapsed} />
+
+        {/* MENU */}
+        <ul className={cx("sidebar-menu")}>
+          {menuGroups.map((group, idx) => {
+            const hasTitle = Boolean(group.title);
+            return (
+              <li key={idx} className={cx("menu-group")}>
+                <div className={cx("menu-group__title", { hasTitle })}>
+                  <hr />
+                  {hasTitle && <span>{group.title}</span>}
+                </div>
+                <ul className={cx("menu-group__list")}>
+                  {group.items.map((item, i) => (
+                    <Item
+                      key={i}
+                      data={item}
+                      collapsed={collapsed}
+                      path={pathname}
+                      onExpand={toggleSidebar}
+                    />
+                  ))}
+                </ul>
+              </li>
+            );
+          })}
+        </ul>
+      </aside>
+    </div>
   );
 }

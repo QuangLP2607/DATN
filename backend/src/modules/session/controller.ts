@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import Service from "./service";
 import { Res } from "@/core/response";
+import Service from "./service";
 
 export default {
   // -------------------- search sessions --------------------
@@ -26,8 +26,7 @@ export default {
   // -------------------- update session --------------------
   update: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.validated.params;
-      await Service.update(id, req.validated.body);
+      await Service.update(req.validated.params.id, req.validated.body);
       return Res.success(res, "Session updated successfully");
     } catch (error) {
       next(error);

@@ -1,10 +1,5 @@
 import { z } from "zod";
-
-export const ScheduleIdParamsSchema = z.object({
-  id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid Mongo ID"),
-});
-
-export type ClassIdParams = z.infer<typeof ScheduleIdParamsSchema>;
+import { timeStringSchema } from "@/utils/zod";
 
 export const UpdateScheduleSchema = z
   .object({
@@ -19,8 +14,8 @@ export const UpdateScheduleSchema = z
         "sunday",
       ])
       .optional(),
-    start_time: z.number().min(0).max(1439).optional(),
-    end_time: z.number().min(1).max(1440).optional(),
+    start_time: timeStringSchema.optional(),
+    end_time: timeStringSchema.optional(),
     note: z.string().optional(),
   })
   .refine(

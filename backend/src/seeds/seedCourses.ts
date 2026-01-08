@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-import "dotenv/config";
 import { CourseModel } from "@/models/Course";
 
 export default async function seedCourses() {
@@ -49,5 +47,5 @@ export default async function seedCourses() {
   ];
 
   await CourseModel.insertMany(courses);
-  console.log(`✅ ${courses.length} courses inserted`);
+  console.log(`${courses.length} courses inserted`);
 }

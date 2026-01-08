@@ -1,223 +1,230 @@
-.calendar {
-  width: 100%;
-  padding: 20px;
-  border-radius: 10px;
-  background: var(--color-bg);
-  color: var(--color-text);
-  max-width: 1000px;
+@use "@/styles" as *;
+@use "sass:list";
 
+.calendar {
+  /* ================= CONFIG ================= */
+  --hour-row-height: 8em;
+  width: 100%;
+  max-width: 100em;
+  min-width: 80em;
+
+  /* ================= Header ================= */
   .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--color-main-bg);
-    padding: 15px 20px;
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    padding: 1.5em 2em;
+    border: 0.1em solid color(border-default);
+    border-radius: 0.8em;
+    background: color(bg-paper);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 2em;
+    @include flex(row, space-between, center);
 
     &__nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-radius: 5px;
-      gap: 1px;
+      border-radius: 0.4em;
       overflow: hidden;
+      @include flex(row, space-between, center, 0.1em);
 
       &-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 30px;
-        border: none;
-
-        background: var(--color-bg);
-        color: var(--color-text);
-        cursor: pointer;
-
-        &.left,
-        &.right {
-          width: 30px;
-        }
+        font-size: 1.4em;
+        @include flex(row, center, center);
+        @include button-base(primary, large, round);
+        @include size(2.4em);
+        padding: 0;
+        border-radius: 0;
 
         &.today {
-          padding: 0 20px;
+          width: 6em;
         }
       }
     }
 
     &__date {
-      font-size: 1.8rem;
+      font-size: 1.8em;
       font-weight: bold;
+      color: color(text-primary);
     }
 
     &__mode {
       display: flex;
-      gap: 5px;
+      gap: 0.5em;
 
       &-btn {
-        padding: 6px 12px;
-        border-radius: 5px;
-
-        background: var(--color-surface);
-        color: var(--color-text);
+        @include button-base(default, large, medium);
 
         &.active {
-          background: #4caf50;
-          color: white;
+          background: color(primary-solid);
+          color: color(text-inverse);
           font-weight: bold;
         }
       }
     }
   }
+
+  /* ================= Week View ================= */
+  &__week {
+    background: color(bg-muted);
+    border: 0.1em solid color(border-muted);
+    box-shadow: var(--shadow-sm);
+    border-radius: 0.5em;
+    overflow: hidden;
+
+    &-header {
+      display: grid;
+      height: 8em;
+      background: color(bg-paper);
+      border-bottom: 0.1em solid color(border-muted);
+      grid-template-columns: 5em repeat(7, 1fr);
+    }
+
+    .day {
+      padding: 1.5em 1em;
+      text-align: center;
+      border-left: 0.1em solid color(border-muted);
+
+      &-label {
+        font-size: 1.1em;
+        font-weight: bold;
+        margin-bottom: 0.4em;
+        color: color(text-secondary);
+      }
+
+      &-number {
+        font-size: 1.6em;
+        color: color(text-secondary);
+        margin: 0 auto;
+        @include flex(row, center, center);
+
+        &.today {
+          border: 0.1em solid color(primary-solid);
+          background: color(primary-light);
+          color: color(primary-solid);
+          @include circle(2.2em);
+        }
+      }
+    }
+
+    &-body {
+      position: relative;
+      display: grid;
+      grid-template-columns: 5em repeat(7, 1fr);
+      margin-top: 2em;
+
+      .unit {
+        &-column {
+          transform: translateY(-0.8em);
+        }
+
+        &-cell {
+          height: var(--hour-row-height);
+          @include flex(row, center, top);
+        }
+      }
+    }
+
+    .day {
+      &-column {
+        position: relative;
+
+        &::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          top: -2em;
+
+          border-left: 0.1em solid color(border-muted);
+        }
+      }
+
+      &-cell {
+        height: var(--hour-row-height);
+        border-top: 0.1em solid color(border-muted);
+      }
+    }
+  }
+
+  /* ================= Event ================= */
+  .event {
+    position: absolute;
+    right: 0.4em;
+    left: 0.4em;
+    z-index: 10;
+    padding: 0.8em;
+    border-radius: 0.4em;
+    color: color(text-inverse);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+
+    &-time {
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+
+    &-title {
+      font-weight: bold;
+      margin-top: 0.4em;
+    }
+  }
 }
 
-.view-mode-buttons {
-  display: flex;
-  gap: 8px;
-}
-.view-mode-buttons .week-view {
-  border-radius: 8px;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-.week-days-header {
-  display: grid;
-  background: #fafafa;
-  border-bottom: 2px solid #e0e0e0;
-  grid-template-columns: 60px repeat(7, 1fr);
-}
-.day-cell {
-  padding: 15px 10px;
-  text-align: center;
-  border-left: 1px solid #e0e0e0;
-}
-.day-label {
-  color: #666;
-  font-size: 11px;
-  margin-bottom: 4px;
-}
-.day-number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  margin: 0 auto;
-  border-radius: 50%;
-  color: #333;
-  font-size: 20px;
-}
-.day-number.today {
-  background-color: #e8f5e9;
-  color: #4caf50;
-  font-weight: bold;
-}
-.week-time-grid {
-  position: relative;
-  display: grid;
-  grid-template-columns: 60px repeat(7, 1fr);
-}
-.time-column .time-cell {
-  height: 80px;
-  padding: 5px;
-  color: #666;
-  font-size: 12px;
-  text-align: right;
-  border-top: 1px solid #e0e0e0;
-}
-.day-column {
-  position: relative;
-  border-left: 1px solid #e0e0e0;
-}
-.day-column.today {
-  background-color: #f0f8ff;
-}
-.hour-cell {
-  height: 80px;
-  border-top: 1px solid #e0e0e0;
-}
-.event {
-  position: absolute;
-  right: 4px;
-  left: 4px;
-  z-index: 10;
-  padding: 8px;
-  border-radius: 4px;
-  color: white;
-  font-size: 13px;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-.event-time {
-  font-size: 11px;
-  font-weight: bold;
-}
-.event-title {
-  font-weight: bold;
-  margin-top: 4px;
-}
+/* ================= Month View ================= */
 .month-view {
-  padding: 20px;
-  border-radius: 8px;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: color(bg-muted);
+  border: 0.1em solid color(border-muted);
+  box-shadow: var(--shadow-sm);
+  border-radius: 0.5em;
   overflow: hidden;
 }
+
 .month-days-header {
+  background: color(bg-paper);
+  border-bottom: 0.1em solid color(border-muted);
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  margin-bottom: 10px;
 }
+
 .month-day-label {
-  padding: 10px;
-  color: #666;
-  font-size: 12px;
+  &:not(:last-child) {
+    border-right: 0.1em solid color(border-muted);
+  }
+  padding: 2em;
+  font-size: 1.2em;
   font-weight: bold;
   text-align: center;
+  color: color(text-primary);
 }
+
 .month-grid {
   display: grid;
-  background-color: #e0e0e0;
-  gap: 1px;
   grid-template-columns: repeat(7, 1fr);
+  background: color(bg-muted);
 }
+
 .month-day-cell {
-  position: relative;
+  min-width: 0;
+  border: 1px solid color(bg-paper);
+  min-height: 10em;
   padding: 8px;
-  background: white;
-  min-height: 100px;
-  overflow: hidden;
 }
-.month-day-cell.otherMonth {
-  opacity: 0.4;
-}
+
 .month-day-number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 2.8em;
+  height: 2.8em;
   border-radius: 50%;
-  color: #333;
-  font-size: 14px;
-  margin-bottom: 4px;
+  @include flex(row, center, center);
+
+  &.today {
+    background: color(primary-solid);
+    color: color(text-inverse);
+    font-weight: bold;
+  }
 }
-.month-day-number.today {
-  background-color: #4caf50;
-  color: white;
-  font-weight: bold;
-}
+
 .month-event {
-  padding: 4px 6px;
-  border-radius: 3px;
-  color: white;
-  font-size: 11px;
+  margin-top: 0.2em;
+  padding: 0.4em 0.6em;
+  border-radius: 0.3em;
+  font-size: 1.1em;
+  color: color(text-inverse);
   white-space: nowrap;
-  cursor: pointer;
-  margin-bottom: 2px;
   overflow: hidden;
   text-overflow: ellipsis;
 }

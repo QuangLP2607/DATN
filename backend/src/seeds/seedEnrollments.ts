@@ -1,6 +1,3 @@
-import mongoose from "mongoose";
-import "dotenv/config";
-
 import { EnrollmentModel } from "@/models/Enrollment";
 import { StudentModel } from "@/models/User";
 import { ClassModel } from "@/models/Class";
@@ -24,7 +21,7 @@ export default async function seedEnrollments(count: number) {
 
   try {
     await EnrollmentModel.insertMany(enrollments, { ordered: false });
-    console.log(`✅ ${count} enrollments inserted`);
+    console.log(`${count} enrollments inserted`);
   } catch (err) {
     console.warn("Some duplicates skipped");
   }

@@ -1,34 +1,33 @@
 import { Request, Response, NextFunction } from "express";
-import { success } from "@/core/response";
-import {
-  getStudentsByMonthService,
-  getStudentsPerCourseService,
-} from "./service";
+import { Res } from "@/core/response";
+import Service from "./service";
 
-// GET /stats/students/monthly
-export const getStudentsByMonth = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const stats = await getStudentsByMonthService();
-    success(res, "Lấy thống kê học viên theo tháng thành công", stats);
-  } catch (error) {
-    next(error);
-  }
-};
+export default {
+  // -------------------- get overview --------------------
+  getOverview: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await Service.getOverview();
+      return Res.success(res, "Overview fetched successfully", result);
+    } catch (error) {
+      next(error);
+    }
+  },
 
-// GET /stats/courses/students
-export const getStudentsPerCourse = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const stats = await getStudentsPerCourseService();
-    success(res, "Lấy số học viên theo khóa học thành công", stats);
-  } catch (error) {
-    next(error);
-  }
+  // -------------------- get student enrollments by year/month --------------------
+  getStudentEnrollments: async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const data = await Service.getStudentEnrollments();
+      return Res.success(
+        res,
+        "Student enrollment statistics by year and month fetched successfully",
+        data
+      );
+    } catch (error) {
+      next(error);
+    }
+  },
 };

@@ -1,11 +1,13 @@
+@use "@/styles" as *;
+
 .notification {
   position: relative;
-  @include mixins.circle(40px);
-  background-color: var(--color-bg-default);
+  background-color: color(bg-default);
   cursor: pointer;
+  @include circle(40px);
 
   &-icon {
-    color: var(--color-text-secondary);
+    color: color(text-secondary);
     font-size: 20px;
   }
 
@@ -13,10 +15,10 @@
     position: absolute;
     top: -3px;
     right: -3px;
-    @include mixins.circle(16px);
-    background-color: var(--color-error);
+    background-color: color(error);
     color: white;
     font-size: 8px;
+    @include circle(16px);
   }
 
   &__dropdown {
@@ -26,22 +28,22 @@
     z-index: 1;
     width: 260px;
     padding: 1px;
-    border: 1px solid var(--color-border-default);
+    border: 1px solid color(border-default);
     border-radius: 4px;
-    background-color: var(--color-bg-paper);
+    background-color: color(bg-paper);
 
     &-item {
       display: flex;
       align-items: center;
       padding: 10px 14px;
       border-radius: 4px;
+      color: color(text-primary);
       cursor: pointer;
       gap: 10px;
       text-decoration: none;
-      color: var(--color-text-primary);
 
       &:hover {
-        background-color: var(--color-bg-muted);
+        background-color: color(bg-muted);
       }
     }
 
@@ -50,8 +52,8 @@
     }
 
     &-desc {
+      color: color(text-secondary);
       font-size: 12px;
-      color: var(--color-text-secondary);
       margin-top: 2px;
     }
 
@@ -60,10 +62,10 @@
       position: absolute;
       top: -8px;
       right: 8px;
+      z-index: -100;
       width: 20px;
       height: 8px;
-      z-index: -100px;
-      background: var(--color-border-default);
+      background: color(border-default);
       clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
       content: "";
     }

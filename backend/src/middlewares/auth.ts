@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { verify, JwtPayload } from "jsonwebtoken";
 import { Res } from "@/core/response";
-import { AuthUser } from "@/types/auth";
+import { AuthUser } from "@/interfaces/user";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 

@@ -1,17 +1,19 @@
+@use "@/styles" as *;
+
 .avatar {
   position: relative;
-  @include mixins.circle(40px);
   background-color: vars(--color-bg-default);
   cursor: pointer;
+  @include circle(40px);
 
   &-icon {
+    color: color(text-secondary);
     font-size: 24px;
-    color: var(--color-text-secondary);
   }
 
   &-img {
-    @include mixins.circle(40px);
     object-fit: cover;
+    @include circle(40px);
   }
 
   &__dropdown {
@@ -21,22 +23,28 @@
     z-index: 1;
     width: 150px;
     padding: 1px;
-    border: 1px solid var(--color-border-default);
+    border: 1px solid color(border-default);
     border-radius: 4px;
-    background-color: var(--color-bg-paper);
+    background-color: color(bg-paper);
 
     &-item {
       display: flex;
       align-items: center;
       padding: 10px 14px;
       border-radius: 4px;
+      color: color(text-primary);
       cursor: pointer;
       gap: 10px;
       text-decoration: none;
-      color: var(--color-text-primary);
+
+      svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
 
       &:hover {
-        background-color: var(--color-bg-muted);
+        background-color: color(bg-muted);
       }
     }
 
@@ -45,10 +53,10 @@
       position: absolute;
       top: -8px;
       right: 8px;
+      z-index: -100;
       width: 20px;
       height: 8px;
-      z-index: -100px;
-      background: var(--color-border-default);
+      background: color(border-default);
       clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
       content: "";
     }

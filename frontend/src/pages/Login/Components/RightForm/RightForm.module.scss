@@ -1,78 +1,101 @@
+@use "@/styles" as *;
+
 .right {
-  @include mixins.flex(column, center, center);
-  width: 450px;
+  @include size(100%);
+  @include flex(column, center, center);
   padding: 50px;
-  background: var(--color-bg-paper);
+  background: color(bg-muted);
 }
 
 .form {
-  @include mixins.flex(column, center, center);
+  @include flex(column, center, center);
   width: 100%;
 
   &__logo {
-    @include mixins.flex(row, center, center, 10px);
+    @include flex(row, center, center, 10px);
     height: 50px;
     margin-bottom: 40px;
 
-    &-icon {
-      height: 100%;
-    }
+    &-icon,
     &-text {
       height: 100%;
     }
   }
 
   &__title {
-    color: var(--color-text-primary);
+    color: color(text-primary);
     font-size: 20px;
     font-weight: normal;
-    white-space: nowrap;
     margin-bottom: 20px;
   }
 
   &__input {
     width: 100%;
-    padding: 10px;
+    padding: 10px 40px 10px 0;
     border: none;
-
-    background-color: var(--color-bg-paper);
-    color: var(--color-text);
-    border-bottom: 1px solid var(--color-gray-300);
+    border-radius: 0;
+    background: transparent;
+    color: color(text-primary);
+    border-bottom: 1px solid color(border-default);
     margin-bottom: 30px;
 
+    &::placeholder {
+      color: color(text-placeholder);
+    }
+
     &:focus {
-      border-bottom-color: var(--color-gray-500);
+      border-bottom-color: color(border-focus);
       outline: none;
+    }
+  }
+
+  /* PASSWORD WRAPPER */
+  &__password {
+    position: relative;
+    width: 100%;
+  }
+
+  &__password-toggle {
+    position: absolute;
+    right: 0;
+    top: 4px;
+    @include flex(row, center, center);
+    padding: 6px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+
+    color: color(text-placeholder);
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: color(primary-solid);
     }
   }
 
   &__error {
     margin-top: 10px;
-    color: #ef4444;
+    color: color(error);
   }
 
   &__forgot {
+    z-index: 10;
     width: 100%;
-    color: var(--color-text);
+    color: color(text-secondary);
     font-size: 12px;
     text-align: right;
     cursor: pointer;
     margin-top: -20px;
 
     &:hover {
-      color: #538f62;
+      color: color(primary-hover);
       text-decoration: underline;
     }
   }
 
   &__btn {
+    @include button-base(primary, large, round);
     width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 99px;
-    background-color: var(--color-primary);
-    color: var(--color-bg);
-    cursor: pointer;
     margin-top: 40px;
   }
 
@@ -80,7 +103,7 @@
     position: relative;
     width: 50%;
     margin: 20px 0;
-    color: var(--color-text);
+    color: color(text-secondary);
     font-size: 12px;
     text-align: center;
 
@@ -90,7 +113,7 @@
       top: 50%;
       width: 40%;
       height: 1px;
-      background-color: var(--color-text);
+      background-color: color(border-muted);
       content: "";
     }
 
@@ -105,15 +128,19 @@
 
   &__google {
     display: flex;
-    color: var(--color-text);
+    align-items: center;
+    gap: 10px;
+    color: color(text-secondary);
     font-size: 14px;
     cursor: pointer;
-    gap: 10px;
+    user-select: none;
+
+    &:hover {
+      color: color(primary-solid);
+    }
 
     svg {
-      width: 20px;
-      height: 20px;
-      vertical-align: middle;
+      @include size(20px);
     }
   }
 }

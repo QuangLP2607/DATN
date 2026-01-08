@@ -25,14 +25,19 @@ const AdminLayout = ({
       {showSidebar && <AdminSidebar />}
 
       <div className={cx("wrapper__content")}>
-        {showHeader && <AdminHeader />}
+        {showHeader && (
+          <div className={cx("wrapper__content--header")}>
+            <AdminHeader />
+          </div>
+        )}
 
-        {/* Main layout container */}
-        <div className={cx("main-container")}>
-          <main className={cx("main")}>{children}</main>
-        </div>
+        <main className={cx("wrapper__content--main")}>{children}</main>
 
-        {showFooter && <AdminFooter />}
+        {showFooter && (
+          <div className={cx("wrapper__content--footer")}>
+            <AdminFooter />
+          </div>
+        )}
       </div>
     </div>
   );

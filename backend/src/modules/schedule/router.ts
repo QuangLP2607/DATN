@@ -5,18 +5,16 @@ import { roleMiddleware } from "@/middlewares/role";
 import { validateZod } from "@/middlewares/validateZod";
 import { SearchScheduleSchema } from "./dto/searchSchedule";
 import { CreateScheduleSchema } from "./dto/createSchedule";
-import {
-  ScheduleIdParamsSchema,
-  UpdateScheduleSchema,
-} from "./dto/updateSchedule";
+import { UpdateScheduleSchema } from "./dto/updateSchedule";
+import { paramIdSchema } from "@/utils/zod";
 
 const router = Router();
 
 router.use(authMiddleware);
 
-router.get(
+router.post(
   "/",
-  validateZod({ query: SearchScheduleSchema }),
+  validateZod({ body: SearchScheduleSchema }),
   Controller.search
 );
 
@@ -31,7 +29,7 @@ router.patch(
   "/:id",
   roleMiddleware(["TEACHER", "ADMIN"]),
   validateZod({
-    params: ScheduleIdParamsSchema,
+    params: paramIdSchema(),
     body: UpdateScheduleSchema,
   }),
   Controller.update
@@ -40,7 +38,7 @@ router.patch(
 router.delete(
   "/:id",
   roleMiddleware(["TEACHER", "ADMIN"]),
-  validateZod({ params: ScheduleIdParamsSchema }),
+  validateZod({ params: paramIdSchema() }),
   Controller.remove
 );
 

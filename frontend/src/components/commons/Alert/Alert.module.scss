@@ -1,19 +1,4 @@
-@use "sass:list";
-
-$alert-colors: (
-  success: (
-    #77bd59,
-    #ecf5e7,
-  ),
-  error: (
-    #dc4446,
-    #f9e0e0,
-  ),
-  warning: (
-    #f0ad4e,
-    #fff4e5,
-  ),
-);
+@use "@/styles" as *;
 
 .alert {
   position: fixed;
@@ -24,32 +9,65 @@ $alert-colors: (
   width: 350px;
   padding: 5px 5px 10px 5px;
   border: 1px solid;
-  border-radius: 5px;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  transform: translateY(-20px);
+  border-radius: 8px;
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.3s;
+  transform: translateY(-20px) scale(0.95);
   opacity: 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   gap: 5px;
 
-  @each $type, $colors in $alert-colors {
-    &.#{$type} {
-      background-color: list.nth($colors, 2);
-      color: list.nth($colors, 1);
-      border-color: list.nth($colors, 1);
+  backdrop-filter: blur(6px);
 
-      .close {
-        color: list.nth($colors, 1);
-      }
+  &.show {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    box-shadow: var(--shadow-sm);
+  }
 
-      .progress {
-        background-color: list.nth($colors, 1);
-      }
+  &.success {
+    background-color: color(success-light);
+    color: color(success);
+    border-color: color(success);
+
+    .close {
+      color: color(success);
+      transition: color 0.2s;
+    }
+
+    .progress {
+      background-color: color(success);
     }
   }
 
-  &.show {
-    transform: translateY(0);
-    opacity: 0.9;
+  &.error {
+    background-color: color(error-light);
+    color: color(error);
+    border-color: color(error);
+
+    .close {
+      color: color(error);
+      transition: color 0.2s;
+    }
+
+    .progress {
+      background-color: color(error);
+    }
+  }
+
+  &.warning {
+    background-color: color(warning-light);
+    color: color(warning);
+    border-color: color(warning);
+
+    .close {
+      color: color(warning);
+      transition: color 0.2s;
+    }
+
+    .progress {
+      background-color: color(warning);
+    }
   }
 
   &-wrapper {
@@ -61,6 +79,8 @@ $alert-colors: (
 
   &-icon {
     font-size: 24px;
+    flex-shrink: 0;
+    animation: icon-bounce 0.4s ease;
   }
 
   &-title {
@@ -73,14 +93,9 @@ $alert-colors: (
   }
 
   .close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
+    @include size(24px);
     background: none;
     font-size: 24px;
-    cursor: pointer;
   }
 
   .progress {
@@ -89,15 +104,34 @@ $alert-colors: (
     left: 0;
     width: 100%;
     height: 4px;
-    animation: progress-bar 4s linear forwards;
+    animation-name: progress-bar;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    border-radius: 0 0 8px 8px;
+    transition: width 0.05s linear;
   }
 }
 
+// ======================================================
+// ANIMATIONS
+// ======================================================
 @keyframes progress-bar {
   from {
     width: 100%;
   }
   to {
     width: 0%;
+  }
+}
+
+@keyframes icon-bounce {
+  0% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }

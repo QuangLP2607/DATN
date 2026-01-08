@@ -21,7 +21,7 @@ export default {
       const { accessToken, refreshToken, role } = await Service.login(req.body);
       const refreshTokenExpires = process.env.JWT_REFRESH_TOKEN_EXPIRES ?? "7d";
       const maxAgeMs = (ms as any)(refreshTokenExpires) as number;
-
+      console.log("test");
       if (typeof maxAgeMs !== "number" || maxAgeMs <= 0) {
         throw new Error(
           `Invalid time format for JWT_REFRESH_TOKEN_EXPIRES: ${refreshTokenExpires}`

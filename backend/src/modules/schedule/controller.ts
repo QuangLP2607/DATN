@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import Service from "./service";
 import { Res } from "@/core/response";
+import Service from "./service";
 
 export default {
   // -------------------- search schedules --------------------
   search: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const schedules = await Service.search(req.validated.query);
-      return Res.success(res, "Get schedules successfully", schedules);
+      const result = await Service.search(req.validated.body);
+      return Res.success(res, "Get schedules successfully", result);
     } catch (error) {
       next(error);
     }
@@ -16,8 +16,8 @@ export default {
   // -------------------- create schedule --------------------
   create: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const schedule_id = await Service.create(req.validated.body);
-      return Res.created(res, "Schedule created successfully", schedule_id);
+      const result = await Service.create(req.validated.body);
+      return Res.created(res, "Schedule created successfully", result);
     } catch (error) {
       next(error);
     }
@@ -26,8 +26,7 @@ export default {
   // -------------------- update schedule --------------------
   update: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.validated.params;
-      await Service.update(id, req.validated.body);
+      await Service.update(req.validated.params.id, req.validated.body);
       return Res.success(res, "Schedule updated successfully");
     } catch (error) {
       next(error);
@@ -37,8 +36,7 @@ export default {
   // -------------------- delete schedule --------------------
   remove: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.validated.params;
-      await Service.remove(id);
+      await Service.remove(req.validated.params.id);
       return Res.success(res, "Schedule deleted successfully");
     } catch (error) {
       next(error);

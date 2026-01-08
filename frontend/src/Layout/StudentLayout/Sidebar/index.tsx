@@ -8,9 +8,21 @@ const studentMenu: MenuGroup[] = [
     title: "Tổng quan",
     items: [
       { to: "/home", icon: "tabler:home", label: "Trang chủ" },
-      { to: "/lectures", icon: "tabler:video", label: "Bài giảng" },
-      { to: "/exercises", icon: "tabler:checkbox", label: "Bài tập" },
-      { to: "/chat", icon: "tabler:messages", label: "Nhóm chat" },
+      {
+        to: "/lectures",
+        icon: "tabler:video",
+        label: "Bài giảng",
+      },
+      {
+        to: "/exercises",
+        icon: "tabler:checkbox",
+        label: "Bài tập",
+      },
+      {
+        to: "/chat",
+        icon: "tabler:messages",
+        label: "Nhóm chat",
+      },
     ],
   },
   {
@@ -21,7 +33,6 @@ const studentMenu: MenuGroup[] = [
         icon: "hugeicons:user-settings-01",
         label: "Tài khoản",
       },
-      { to: "/logout", icon: "tabler:logout", label: "Đăng xuất" },
     ],
   },
 ];

@@ -1,18 +1,26 @@
 import { z } from "zod";
-import { paginationQuerySchema } from "@/utils/zod";
+import { paginationQuerySchema, Pagination, isoDateSchema } from "@/utils/zod";
+import { ClassStatuses } from "@/interfaces/class";
+import { IClass } from "@/interfaces/class";
+import { ITeacher } from "@/interfaces/user";
+import { ICourse } from "@/interfaces/course";
 
-export const SearchClassesSchema = paginationQuerySchema.extend({
-  from: z
-    .string()
-    .datetime({ offset: true })
-    .optional()
-    .describe("Start date for filtering classes"),
-  to: z
-    .string()
-    .datetime({ offset: true })
-    .optional()
-    .describe("End date for filtering classes"),
-});
+export const SearchClassesSchema = paginationQuerySchema
+  .extend({
+    from: isoDateSchema.optional(),
+    to: isoDateSchema.optional(),
+    status: z.enum(ClassStatuses).optional(),
+  })
+  .strict();
 
-// --- TypeScript type từ Zod ---
 export type SearchClassesInput = z.infer<typeof SearchClassesSchema>;
+
+export type ClassDetail = IClass & {
+  teachers?: Pick<ITeacher, "id" | "username">[];
+  course?: Pick<ICourse, "id" | "name" | "code">;
+};
+
+export interface SearchClassesResponse {
+  classes: ClassDetail[];
+  pagination: Pagination;
+}

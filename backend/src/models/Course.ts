@@ -8,7 +8,9 @@ const courseSchema = new Schema<ICourse>(
     description: { type: String, trim: true, maxlength: 500 },
     status: { type: String, enum: ["active", "inactive"], default: "active" },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 export const CourseModel = model<ICourse>("Course", courseSchema, "courses");

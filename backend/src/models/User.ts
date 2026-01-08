@@ -1,13 +1,15 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 import {
   IUserBase,
   IAdmin,
   IStudent,
   ITeacher,
   Roles,
+  JapaneseLevels,
+  TeacherStatuses,
 } from "@/interfaces/user";
 
-/* -------------------------------- BASE USER ------------------------------- */
+/* ----------------------------- BASE USER ----------------------------- */
 const userSchema = new Schema<IUserBase>(
   {
     username: { type: String, unique: true, trim: true },
@@ -20,6 +22,7 @@ const userSchema = new Schema<IUserBase>(
       index: true,
     },
     password: { type: String, required: true, select: false },
+    avatar_id: { type: Types.ObjectId, ref: "Media" },
     role: {
       type: String,
       required: true,
@@ -36,23 +39,22 @@ const userSchema = new Schema<IUserBase>(
 
 export const UserModel = model<IUserBase>("User", userSchema, "users");
 
-/* --------------------------------- ADMIN --------------------------------- */
+/* ------------------------------ ADMIN ------------------------------- */
 const adminSchema = new Schema({});
 export const AdminModel = UserModel.discriminator<IAdmin>("ADMIN", adminSchema);
 
-/* -------------------------------- STUDENT -------------------------------- */
+/* ----------------------------- STUDENT ------------------------------ */
 const studentSchema = new Schema<IStudent>({
-  full_name: { type: String, default: "" },
-  avatar_url: String,
+  full_name: { type: String, default: "", trim: true },
   dob: Date,
-  phone: { type: String, index: true },
-  address: String,
+  phone: { type: String, index: true, trim: true },
+  address: { type: String, trim: true },
   japaneseLevel: {
     type: String,
-    enum: ["Không", "N5", "N4", "N3", "N2", "N1"],
-    default: "Không",
+    enum: JapaneseLevels,
+    default: JapaneseLevels[0],
   },
-  note: String,
+  note: { type: String, trim: true },
   lastLogin: Date,
 });
 
@@ -61,19 +63,18 @@ export const StudentModel = UserModel.discriminator<IStudent>(
   studentSchema
 );
 
-/* -------------------------------- TEACHER -------------------------------- */
+/* ----------------------------- TEACHER ------------------------------ */
 const teacherSchema = new Schema<ITeacher>({
-  full_name: { type: String, default: "" },
-  avatar_url: String,
+  full_name: { type: String, default: "", trim: true },
   dob: Date,
-  phone: { type: String, index: true },
-  address: String,
+  phone: { type: String, index: true, trim: true },
+  address: { type: String, trim: true },
   status: {
     type: String,
-    enum: ["active", "inactive", "pending"],
-    default: "active",
+    enum: TeacherStatuses,
+    default: TeacherStatuses[0],
   },
-  note: String,
+  note: { type: String, trim: true },
 });
 
 export const TeacherModel = UserModel.discriminator<ITeacher>(

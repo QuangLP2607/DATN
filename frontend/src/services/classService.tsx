@@ -1,28 +1,61 @@
-import type { Class, PaginatedResponse } from "@/interfaces/class";
-import type { ApiResponse } from "@/interfaces/common";
+import type { Class, ClassStatus } from "@/interfaces/class";
+import type { User } from "@/interfaces/user";
+import type { Course } from "@/interfaces/course";
+import type {
+  ApiResponse,
+  ListParams,
+  PaginatedResponse,
+} from "@/interfaces/common";
 import apiClient from "./apiClient";
 
+// ===== Types ================================================================
+export interface SearchClassesParams extends ListParams {
+  from?: string;
+  to?: string;
+  status?: ClassStatus;
+}
+
+export type ClassDetail = Class & {
+  teachers?: Pick<User, "id" | "username">[];
+  course?: Pick<Course, "id" | "name" | "code">;
+};
+
+export type CreateClassPayload = Pick<Class, "name" | "course_id">;
+
+export type UpdateClassPayload = Partial<
+  Pick<Class, "name" | "course_id" | "teacher_ids" | "start_date" | "end_date">
+>;
+
+export interface MyClassesResponse {
+  classes: Class[];
+}
+
+// ===== API ================================================================
 const classApi = {
-  getAllClasses: (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-    sortField?: string;
-    sortOrder?: "asc" | "desc";
-  }) =>
-    apiClient.get<ApiResponse<PaginatedResponse<Class>>>("class", { params }),
+  async search(
+    params?: SearchClassesParams
+  ): Promise<PaginatedResponse<"classes", ClassDetail[]>> {
+    const res = await apiClient.get<
+      ApiResponse<PaginatedResponse<"classes", ClassDetail[]>>
+    >("class", { params });
 
-  getClassById: (id: string) =>
-    apiClient.get<ApiResponse<Class>>(`class/${id}`),
+    return res.data.data!;
+  },
 
-  createClass: (payload: Partial<Class>) =>
-    apiClient.post<ApiResponse<Class>>("class", payload),
+  async getMy(): Promise<MyClassesResponse> {
+    const res = await apiClient.get<ApiResponse<MyClassesResponse>>("class/me");
+    return res.data.data!;
+  },
 
-  updateClass: (id: string, payload: Partial<Class>) =>
-    apiClient.put<ApiResponse<Class>>(`class/${id}`, payload),
+  async create(payload: CreateClassPayload): Promise<Class> {
+    const res = await apiClient.post<ApiResponse<Class>>("class", payload);
+    return res.data.data!;
+  },
 
-  deleteClass: (id: string) =>
-    apiClient.delete<ApiResponse<null>>(`class/${id}`),
+  async update(id: string, payload: UpdateClassPayload): Promise<Class> {
+    const res = await apiClient.put<ApiResponse<Class>>(`class/${id}`, payload);
+    return res.data.data!;
+  },
 };
 
 export default classApi;

@@ -1,8 +1,11 @@
 import { z } from "zod";
+import { objectIdSchema } from "@/utils/zod";
 
-export const CreateEnrollmentSchema = z.object({
-  class_id: z.string().regex(/^[0-9a-fA-F]{24}$/),
-  student_id: z.string().regex(/^[0-9a-fA-F]{24}$/),
-});
+export const CreateEnrollmentSchema = z
+  .object({
+    class_id: objectIdSchema,
+    student_id: objectIdSchema,
+  })
+  .strict();
 
 export type CreateEnrollmentInput = z.infer<typeof CreateEnrollmentSchema>;

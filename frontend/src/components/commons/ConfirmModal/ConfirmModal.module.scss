@@ -1,73 +1,90 @@
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
+@use "@/styles" as *;
 
+/* ================= MODAL ================= */
 .modal {
-  background: var(--color-bg);
-  padding: 1.5rem;
-  width: 380px;
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  width: 380px;
+  max-width: 90%;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid color(border-default);
+  background-color: color(bg-paper);
+  box-shadow: var(--shadow-lg);
   animation: fadeIn 0.18s ease-out;
+  gap: 1rem;
+  box-shadow: var(--shadow-lg);
 }
 
+/* ================= ANIMATION ================= */
 @keyframes fadeIn {
   from {
-    opacity: 0;
     transform: scale(0.96);
+    opacity: 0;
   }
   to {
-    opacity: 1;
     transform: scale(1);
+    opacity: 1;
   }
 }
 
+/* ================= HEADER ================= */
 .header {
-  color: var(--color-text);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @include flex(row, space-between, center);
 
   h3 {
     margin: 0;
+    color: color(text-primary);
+    font-size: 2rem;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: color(text-secondary);
+    font-size: 2rem;
   }
 }
 
-.close-btn {
-  color: #333;
-  background: none;
-}
-
+/* ================= MESSAGE ================= */
 .message {
+  color: color(text-secondary);
   min-height: 50px;
-  color: var(--color-text);
+  font-size: 1.4rem;
 }
 
+/* ================= ACTIONS ================= */
 .actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-}
+  @include flex(row, flex-end, center, 10px);
+  margin-top: 10px;
 
-.btn {
-  padding: 10px 15px;
-  border-radius: 5px;
-}
+  .btn {
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, filter 0.2s;
 
-.cancel {
-  background: #ddd;
-  color: #333;
-}
+    &:hover {
+      filter: brightness(0.95);
+    }
+  }
 
-.submit {
-  background: #ff4d4d;
-  color: #fff;
+  .primary {
+    @include button-base(primary, medium, small);
+  }
+  .secondary {
+    @include button-base(secondary, medium, small);
+  }
+  .default {
+    @include button-base(default, medium, small);
+  }
+  .danger {
+    @include button-base(danger, medium, small);
+  }
+  .success {
+    @include button-base(success, medium, small);
+  }
 }

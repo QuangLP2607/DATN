@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 export interface ISession {
+  id?: string;
   class_id: Types.ObjectId;
   schedule_id: Types.ObjectId;
   week_number: number;

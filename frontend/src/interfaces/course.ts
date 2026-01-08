@@ -1,38 +1,13 @@
 export interface Course {
-  _id: string;
+  id: string;
   code: string;
   name: string;
   description?: string;
-  total_lessons: number;
-  is_active: boolean;
-  total_classes: number;
-  active_classes: number;
+  status: CourseStatus;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface CreateCoursePayload {
-  code: string;
-  name: string;
-  description?: string;
-  total_lessons?: number;
-  is_active?: boolean;
-}
+export const CourseStatusList = ["active", "inactive"] as const;
 
-export interface UpdateCoursePayload {
-  code?: string;
-  name?: string;
-  description?: string;
-  total_lessons?: number;
-  is_active?: boolean;
-}
-
-export interface PaginatedResponse<T> {
-  items: T[];
-  pagination: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
-}
+export type CourseStatus = (typeof CourseStatusList)[number];

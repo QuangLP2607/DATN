@@ -1,41 +1,127 @@
+import { Types } from "mongoose";
+import AppError from "@/core/AppError";
 import LiveRoomModel from "@/models/LiveRoom";
+import { UserModel } from "@/models/User";
 import { generateJitsiToken, JitsiUser } from "@/services/jitsi";
-import { CreateLiveRoomInput, JoinLiveRoomInput } from "./dto/liveRoom";
+import { CreateLiveRoomInput } from "./dto/create";
+import { JoinLiveRoomInput } from "./dto/join";
 
-export const createRoomService = async (
-  input: CreateLiveRoomInput,
-  user: any
-) => {
-  const room = await LiveRoomModel.create({
-    name: input.name,
-    classId: user.id,
-    createdBy: user.id,
-  });
+export default {
+  // -------------------- CREATE OR JOIN ROOM --------------------
+  createRoom: async (input: CreateLiveRoomInput, userId: string) => {
+    const user = await UserModel.findById(userId);
+    if (!user) throw AppError.notFound("User not found");
+    const userObjectId = new Types.ObjectId(user._id);
 
-  const jitsiUser = {
-    _id: user.userId,
-    role: user.role,
-    name: user.name,
-    email: user.email,
-  };
+    let room = await LiveRoomModel.findOne({
+      classId: input.classId,
+      status: "OPEN",
+    });
 
-  const token = generateJitsiToken(jitsiUser, room._id.toString());
+    if (!room) {
+      room = await LiveRoomModel.create({
+        name: input.roomName,
+        classId: input.classId,
+        createdBy: userObjectId,
+        participants: [userObjectId],
+        teacherOnline: true,
+        lastSeenTeacher: new Date(),
+      });
+    } else {
+      if (!room.participants.some((id) => id.equals(userObjectId))) {
+        room.participants.push(userObjectId);
+        room.teacherOnline = true;
+        room.lastSeenTeacher = new Date();
+        await room.save();
+      }
+    }
 
-  return { roomId: room._id.toString(), token };
-};
+    const jitsiUser: JitsiUser = {
+      _id: user._id.toString(),
+      role: user.role,
+      name: user.username || "Guest",
+      email: user.email,
+    };
 
-export const joinRoomService = async (input: JoinLiveRoomInput, user: any) => {
-  const room = await LiveRoomModel.findById(input.roomId);
-  if (!room) throw new Error("Room not found");
+    const token = generateJitsiToken(jitsiUser, room._id.toString());
 
-  const jitsiUser: JitsiUser = {
-    _id: user.userId,
-    role: user.role,
-    name: user.email || "Guest",
-    email: user.email,
-  };
+    return { roomId: room._id.toString(), token };
+  },
 
-  const token = generateJitsiToken(jitsiUser, room._id.toString());
+  // -------------------- JOIN ROOM --------------------
+  joinRoom: async (input: JoinLiveRoomInput, userId: string) => {
+    const user = await UserModel.findById(userId);
+    if (!user) throw AppError.notFound("User not found");
 
-  return { roomId: room._id.toString(), token };
+    const room = await LiveRoomModel.findOne({ name: input.roomName });
+    if (!room) throw AppError.notFound("Room not found");
+
+    const userObjectId = new Types.ObjectId(user._id);
+
+    if (!room.participants.some((id) => id.equals(userObjectId))) {
+      room.participants.push(userObjectId);
+      await room.save();
+    }
+
+    const jitsiUser: JitsiUser = {
+      _id: user._id.toString(),
+      role: user.role,
+      name: user.username || "Guest",
+      email: user.email,
+    };
+
+    const token = generateJitsiToken(jitsiUser, room._id.toString());
+
+    return { roomId: room._id.toString(), token };
+  },
+
+  // -------------------- LEAVE ROOM --------------------
+  leaveRoom: async (roomId: string, userId: string) => {
+    const room = await LiveRoomModel.findById(roomId);
+    if (!room) throw AppError.notFound("Room not found");
+
+    const userObjectId = new Types.ObjectId(userId);
+
+    room.participants = room.participants.filter(
+      (id) => !id.equals(userObjectId)
+    );
+
+    if (room.createdBy.equals(userObjectId)) {
+      room.teacherOnline = false;
+    }
+
+    if (room.participants.length === 0) {
+      room.status = "CLOSED";
+      room.endedAt = new Date();
+    }
+
+    await room.save();
+  },
+
+  // -------------------- PING ROOM --------------------
+  pingRoom: async (roomId: string, userId: string) => {
+    const room = await LiveRoomModel.findById(roomId);
+    if (!room) throw AppError.notFound("Room not found");
+    const userObjectId = new Types.ObjectId(userId);
+
+    if (room.createdBy.equals(userObjectId)) {
+      room.lastSeenTeacher = new Date();
+      room.teacherOnline = true;
+      await room.save();
+    }
+  },
+
+  // -------------------- CHECK TEACHER TIMEOUT --------------------
+  checkTeacherTimeout: async () => {
+    const timeout = 90 * 1000;
+    const now = new Date();
+
+    await LiveRoomModel.updateMany(
+      {
+        teacherOnline: true,
+        lastSeenTeacher: { $lt: new Date(now.getTime() - timeout) },
+      },
+      { teacherOnline: false }
+    );
+  },
 };

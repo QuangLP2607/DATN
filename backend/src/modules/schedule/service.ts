@@ -1,34 +1,68 @@
 import AppError from "@/core/AppError";
 import { ScheduleModel } from "@/models/Schedule";
 import { ClassModel } from "@/models/Class";
-import { SearchScheduleInput } from "./dto/searchSchedule";
+import { normalizeMongoList } from "@/utils/mongoNormalize";
+import {
+  SearchScheduleInput,
+  SearchScheduleResponse,
+  ClassWithSchedules,
+} from "./dto/searchSchedule";
 import { CreateScheduleInput } from "./dto/createSchedule";
 import { UpdateScheduleInput } from "./dto/updateSchedule";
 import { Types } from "mongoose";
 
 export default {
   // -------------------- search schedules --------------------
-  search: async (query: SearchScheduleInput) => {
+  search: async (
+    query: SearchScheduleInput
+  ): Promise<SearchScheduleResponse> => {
     const { class_id, from, to } = query;
 
-    const mongoQuery: Record<string, any> = {};
-
+    // ---------------- match class ----------------
+    const classFilter: any = {};
     if (class_id) {
-      mongoQuery.class_id = new Types.ObjectId(class_id);
+      if (Array.isArray(class_id)) {
+        classFilter._id = { $in: class_id.map((id) => new Types.ObjectId(id)) };
+      } else {
+        classFilter._id = new Types.ObjectId(class_id);
+      }
     }
 
-    if (from || to) {
-      mongoQuery.date = {};
-      if (from) mongoQuery.date.$gte = new Date(from);
-      if (to) mongoQuery.date.$lte = new Date(to);
-    }
+    if (from) classFilter.end_date = { $gte: new Date(from) };
+    if (to)
+      classFilter.start_date = {
+        ...classFilter.start_date,
+        $lte: new Date(to),
+      };
 
-    const schedules = await ScheduleModel.find(mongoQuery)
-      .populate("class_id", "name")
-      .sort({ date: 1, start_time: 1 })
+    // ---------------- fetch classes ----------------
+    const classesRaw = await ClassModel.find(classFilter)
+      .select("_id name")
       .lean();
 
-    return schedules;
+    const classIds = classesRaw.map((c) => c._id);
+
+    // ---------------- fetch schedules ----------------
+    const schedulesRaw = await ScheduleModel.find({
+      class_id: { $in: classIds },
+    })
+      .sort({ day_of_week: 1, start_time: 1 })
+      .lean();
+
+    // ---------------- normalize ----------------
+    const classesNormalized = normalizeMongoList(classesRaw);
+    const schedulesNormalized = normalizeMongoList(schedulesRaw);
+
+    // ---------------- map to DTO ----------------
+    const classes: ClassWithSchedules[] = classesNormalized.map((c) => ({
+      id: c.id,
+      name: c.name ?? "",
+      schedules: schedulesNormalized.filter(
+        (s) => s.class_id.toString() === c.id
+      ),
+    }));
+
+    return { classes };
   },
 
   // -------------------- create schedule --------------------

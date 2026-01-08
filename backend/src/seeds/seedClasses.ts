@@ -1,9 +1,7 @@
-import mongoose from "mongoose";
-import "dotenv/config";
-
 import { ClassModel } from "@/models/Class";
 import { CourseModel } from "@/models/Course";
 import { TeacherModel } from "@/models/User";
+import { ConversationModel } from "@/models/Conversation";
 import { faker } from "@faker-js/faker";
 import { generateSchedule, getCourseDuration } from "./seed.helpers";
 
@@ -15,20 +13,19 @@ export default async function seedClasses(count: number) {
     throw new Error("Need existing courses and teachers");
   }
 
-  const classes = [];
-
-  for (let i = 0; i < count; i++) {
+  const classesData = Array.from({ length: count }).map(() => {
     const course = faker.helpers.arrayElement(courses);
     const durationMonths = getCourseDuration(course.name);
 
     const startDate = faker.date.between({
       from: "2025-01-01",
-      to: "2025-06-01",
+      to: "2026-06-01",
     });
+
     const endDate = new Date(startDate);
     endDate.setMonth(endDate.getMonth() + durationMonths);
 
-    classes.push({
+    return {
       name: `${course.name} - Lớp ${faker.string
         .alphanumeric(4)
         .toUpperCase()}`,
@@ -41,9 +38,24 @@ export default async function seedClasses(count: number) {
       end_date: endDate,
       schedule: generateSchedule(),
       status: "upcoming",
-    });
-  }
+    };
+  });
 
-  await ClassModel.insertMany(classes);
-  console.log(`✅ ${count} classes inserted`);
+  const insertedClasses = await ClassModel.insertMany(classesData);
+
+  const conversations = insertedClasses.map((cls) => ({
+    class_id: cls._id,
+  }));
+
+  await ConversationModel.bulkWrite(
+    conversations.map((c) => ({
+      updateOne: {
+        filter: { class_id: c.class_id },
+        update: { $setOnInsert: c },
+        upsert: true,
+      },
+    }))
+  );
+
+  console.log(` ${insertedClasses.length} classes & conversations inserted`);
 }

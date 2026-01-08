@@ -1,12 +1,11 @@
 import { z } from "zod";
+import { objectIdSchema, stringSchema } from "@/utils/zod";
 
 export const CreateClassSchema = z
   .object({
-    course_id: z
-      .string()
-      .regex(/^[0-9a-fA-F]{24}$/, { message: "Invalid course ID" }),
-    name: z.string().min(1, { message: "Name is required" }),
-    description: z.string().optional(),
+    course_id: objectIdSchema,
+    name: stringSchema("Name", 3, 50),
+    description: stringSchema("Description").optional(),
   })
   .strict();
 

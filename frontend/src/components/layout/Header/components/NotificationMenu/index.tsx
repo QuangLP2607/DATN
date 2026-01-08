@@ -1,4 +1,3 @@
-import { useState, useRef, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import styles from "./NotificationMenu.module.scss";
 import classNames from "classnames/bind";
@@ -14,37 +13,33 @@ interface NotificationItem {
 
 interface Props {
   notifications?: NotificationItem[];
+  open: boolean;
+  onToggle: () => void;
 }
 
-export default function NotificationMenu({ notifications = [] }: Props) {
-  const [showNotify, setShowNotify] = useState(false);
-  const notifyRef = useRef<HTMLDivElement>(null);
-
-  const handleClickOutside = (e: MouseEvent) => {
-    if (notifyRef.current && !notifyRef.current.contains(e.target as Node)) {
-      setShowNotify(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
-
+export default function NotificationMenu({
+  notifications = [],
+  open,
+  onToggle,
+}: Props) {
   return (
     <div
       className={cx("notification")}
-      ref={notifyRef}
       onClick={(e) => {
         e.stopPropagation();
-        setShowNotify((prev) => !prev);
+        onToggle();
       }}
     >
-      <Icon className={cx("notification-icon")} icon="iconoir:bell" />
-      {notifications.length > 0 && (
-        <span className={cx("notification-dot")}>{notifications.length}</span>
-      )}
-      {showNotify && (
+      {/* Icon toggle */}
+      <div className={cx("notification__trigger")}>
+        <Icon className={cx("notification-icon")} icon="iconoir:bell" />
+        {notifications.length > 0 && (
+          <span className={cx("notification-dot")}>{notifications.length}</span>
+        )}
+      </div>
+
+      {/* Dropdown */}
+      {open && (
         <div className={cx("notification__dropdown")}>
           {notifications.length === 0 ? (
             <div className={cx("notification__dropdown-item")}>
@@ -56,10 +51,13 @@ export default function NotificationMenu({ notifications = [] }: Props) {
               return (
                 <Comp
                   key={n.id}
-                  className={cx("notification__dropdown-item")}
                   href={n.href}
+                  className={cx("notification__dropdown-item")}
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  {n.title}
+                  <div className={cx("notification__dropdown-title")}>
+                    {n.title}
+                  </div>
                   {n.description && (
                     <div className={cx("notification__dropdown-desc")}>
                       {n.description}

@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { emailSchema, passwordSchema } from "@/utils/zod";
 
 export const LoginSchema = z
   .object({
-    email: z.email({ message: "Invalid email" }),
-    password: z.string().min(6, { message: "Password too short" }),
+    email: emailSchema,
+    password: passwordSchema,
   })
   .strict();
 

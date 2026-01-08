@@ -1,22 +1,29 @@
-import { MediaModel } from "@/models/MediaFile";
+import AppError from "@/core/AppError";
+import { UserModel } from "@/models/User";
+import { MediaModel } from "@/models/Media";
+import { redis } from "@/config/redis";
+import s3 from "@/config/s3";
 import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import s3 from "@/config/s3";
-import { Types } from "mongoose";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { normalizeMongo } from "@/utils/mongoNormalize";
+import { fetchS3Url } from "@/utils/s3UrlCache";
+import { CreateMediaInput } from "./dto/create";
+import { CreateUploadUrlInput } from "./dto/createUploadUrl";
+import { UpdateMediaInput } from "./dto/update";
 
 const BUCKET = process.env.AWS_BUCKET_NAME!;
-const REGION = process.env.AWS_REGION || "ap-southeast-1";
 const EXPIRES_IN = Number(process.env.AWS_EXPIRES_IN || 900);
 
-export const Service = {
-  // trả upload URL (PUT)
-  getUploadUrl: async (data: {
-    class_id: string;
-    file_name: string;
-    file_type: string;
-  }) => {
-    const ext = data.file_name.split(".").pop();
-    const fileKey = `classes/${data.class_id}/${Date.now()}.${ext ?? ""}`;
+export default {
+  // -------------------- create upload url --------------------
+  createUploadUrl: async (data: CreateUploadUrlInput) => {
+    const [domain, type] = data.purpose.split("/", 2);
+    const ext = data.file_type.split("/").pop() ?? "bin";
+
+    const fileKey = `${domain}/${
+      data.domain_id
+    }/${type}/${Date.now()}-${crypto.randomUUID()}.${ext}`;
 
     const command = new PutObjectCommand({
       Bucket: BUCKET,
@@ -31,51 +38,78 @@ export const Service = {
     return { uploadUrl, fileKey };
   },
 
-  // lưu thông tin media vào DB
-  saveMedia: async (data: {
-    class_id: string;
-    file_key: string;
-    file_type: string; // mime
-    size?: number;
-    uploaded_by?: string | null;
-    file_url?: string | null; // optional
-  }) => {
-    // derive media_type
-    const mediaType = data.file_type?.startsWith("video") ? "video" : "image";
-
-    const doc = await MediaModel.create({
-      class_id: Types.ObjectId.isValid(data.class_id)
-        ? new Types.ObjectId(data.class_id)
-        : data.class_id,
-      file_key: data.file_key,
-      file_url: data.file_url || undefined,
-      file_type: data.file_type,
-      media_type: mediaType,
-      file_size: data.size,
-      uploaded_by:
-        data.uploaded_by && Types.ObjectId.isValid(data.uploaded_by)
-          ? new Types.ObjectId(data.uploaded_by)
-          : data.uploaded_by || null,
-    });
-
-    return doc;
-  },
-
-  // get media list for a class
-  getMediaByClass: async (classId: string) => {
-    const q =
-      Types.ObjectId.isValid(classId) && typeof classId === "string"
-        ? { class_id: new Types.ObjectId(classId) }
-        : { class_id: classId };
-    return MediaModel.find(q).sort({ createdAt: -1 }).lean();
-  },
-
-  // trả pre-signed GET URL (view/download)
-  getViewUrl: async (fileKey: string) => {
+  // -------------------- get view url --------------------
+  getViewUrl: async (id: string) => {
+    const media = await MediaModel.findOne({ _id: id });
+    if (!media) throw AppError.notFound("Media not found");
     const command = new GetObjectCommand({
       Bucket: BUCKET,
-      Key: fileKey,
+      Key: media.file_key,
     });
-    return getSignedUrl(s3, command, { expiresIn: EXPIRES_IN });
+
+    const url = id ? await fetchS3Url(media.file_key) : undefined;
+
+    return { ...normalizeMongo(media.toObject()), url };
+  },
+
+  // -------------------- get download url --------------------
+  getDownloadUrl: async (id: string) => {
+    const media = await MediaModel.findById(id);
+    if (!media) throw AppError.notFound("Media not found");
+
+    const command = new GetObjectCommand({
+      Bucket: BUCKET,
+      Key: media.file_key,
+      ResponseContentDisposition: `attachment; filename="${media.file_name}"`,
+      ResponseContentType: media.file_type,
+    });
+
+    const url = await getSignedUrl(s3, command, {
+      expiresIn: EXPIRES_IN,
+    });
+
+    return { url };
+  },
+
+  // -------------------- create --------------------
+  create: async (userId: string, data: CreateMediaInput) => {
+    const user = await UserModel.findById(userId).lean();
+    if (!user) {
+      throw AppError.notFound("User not found");
+    }
+
+    const media = await MediaModel.create({
+      ...data,
+      uploaded_by: userId,
+    });
+
+    return normalizeMongo(media.toObject());
+  },
+
+  // -------------------- update --------------------
+  update: async (id: string, data: UpdateMediaInput) => {
+    const media = await MediaModel.findByIdAndUpdate(
+      id,
+      { $set: data },
+      { new: true }
+    );
+
+    if (!media) throw AppError.notFound("Media not found");
+    return normalizeMongo(media.toObject());
+  },
+
+  // -------------------- delete --------------------
+  delete: async (id: string) => {
+    const media = await MediaModel.findById(id);
+    if (!media) throw AppError.notFound("Media not found");
+    await redis.del(media.file_key);
+    await s3.send(
+      new DeleteObjectCommand({
+        Bucket: BUCKET,
+        Key: media.file_key,
+      })
+    );
+
+    await media.deleteOne();
   },
 };

@@ -118,7 +118,7 @@ export const weekdays = [
 
 export function generateSchedule() {
   const selectedDays = faker.helpers.arrayElements(
-    weekdays.slice(0, 6), // monday-saturday
+    weekdays.slice(0, 6),
     faker.number.int({ min: 2, max: 3 })
   );
 
@@ -126,7 +126,7 @@ export function generateSchedule() {
     const startHour = faker.helpers.arrayElement([8, 10, 14, 18]);
     return {
       day_of_week: day,
-      start_time: startHour * 60, // convert giờ sang phút
+      start_time: startHour * 60,
       end_time: (startHour + 2) * 60,
       note: faker.helpers.maybe(() => faker.lorem.words(3)),
     };
