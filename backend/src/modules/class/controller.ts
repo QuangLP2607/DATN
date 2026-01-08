@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import Service from "./service";
 import { Res } from "@/core/response";
+import Service from "./service";
 
 export default {
   // -------------------- search classes --------------------
@@ -17,8 +17,8 @@ export default {
   getMy: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = req.user!;
-      const classes = await Service.getMy(user);
-      return Res.success(res, "My classes retrieved successfully", classes);
+      const result = await Service.getMy(user);
+      return Res.success(res, "My classes retrieved successfully", result);
     } catch (error) {
       next(error);
     }
@@ -27,8 +27,22 @@ export default {
   // -------------------- create class --------------------
   create: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const class_id = await Service.create(req.validated.body);
-      return Res.success(res, "Class created successfully", class_id);
+      const result = await Service.create(req.validated.body);
+      return Res.success(res, "Class created successfully", result);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // -------------------- create class --------------------
+  addTeachers: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await Service.addTeachers(
+        req.validated.params.id,
+        req.validated.body
+      );
+
+      return Res.success(res, "Add teachers successfully", result);
     } catch (error) {
       next(error);
     }
@@ -37,7 +51,7 @@ export default {
   // -------------------- update classes --------------------
   update: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await Service.update(req.validated.params, req.validated.body);
+      await Service.update(req.validated.params.id, req.validated.body);
       return Res.success(res, "Class updated successfully");
     } catch (error) {
       next(error);

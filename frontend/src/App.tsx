@@ -7,6 +7,7 @@ import {
   Routes,
 } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { UploadProvider } from "./contexts/uploadContext";
 import type { RouteType } from "@/routes";
 import { privateRoutes, publicRoutes } from "@/routes";
 import { ProtectedRoute, PublicRoute } from "@/routes/AuthRoute";
@@ -77,9 +78,11 @@ function AppRouter() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppRouter />
-      </Router>
+      <UploadProvider>
+        <Router>
+          <AppRouter />
+        </Router>
+      </UploadProvider>
     </AuthProvider>
   );
 }

@@ -1,20 +1,31 @@
-import React, { useEffect,useState } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import classNames from "classnames/bind";
 import styles from "./Calendar.module.scss";
-
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { Icon } from "@iconify/react";
 
 const cx = classNames.bind(styles);
+
+/* ======================= Types ======================= */
 
 export interface Event {
   start: number;
   duration: number;
   title: string;
-  colorClass: "blue" | "yellow" | "green";
 }
 
 export interface EventWithDate extends Event {
-  date: Date; // ngày diễn ra sự kiện
+  date: Date;
+}
+
+export interface CalendarRange {
+  from: Date;
+  to: Date;
 }
 
 interface WeekDay {
@@ -37,225 +48,269 @@ interface MonthDay {
 
 interface CalendarProps {
   events?: EventWithDate[];
+  onRangeChange?: (range: CalendarRange) => void; // ✅ thêm
 }
 
-const Calendar: React.FC<CalendarProps> = ({ events = [] }) => {
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+/* ======================= Color Palette ======================= */
+
+const EVENT_COLORS = [
+  "#4A90E2",
+  "#50E3C2",
+  "#4CAF50",
+  "#8BC34A",
+  "#FFC107",
+  "#FFA500",
+  "#FF7043",
+  "#F06292",
+  "#BA68C8",
+  "#9575CD",
+  "#7986CB",
+  "#90A4AE",
+];
+
+const getEventColor = (index: number) =>
+  EVENT_COLORS[index % EVENT_COLORS.length];
+
+const hexToRgba = (hex: string, alpha: number) => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
+/* ======================= Component ======================= */
+
+function Calendar({ events = [], onRangeChange }: CalendarProps) {
+  const calendarRef = useRef<HTMLDivElement>(null);
+  const lastRangeRef = useRef<string>("");
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [weekDays, setWeekDays] = useState<WeekDay[]>([]);
   const [monthDays, setMonthDays] = useState<MonthDay[]>([]);
   const [viewMode, setViewMode] = useState<"week" | "month">("week");
 
-  const hours: number[] = Array.from({ length: 17 }, (_, i) => i + 6);
+  const [rowHeight, setRowHeight] = useState(8);
+  const hours = Array.from({ length: 17 }, (_, i) => i + 6);
 
-  const getStartOfWeek = (date: Date): Date => {
+  /* ======================= Read CSS Variable ======================= */
+  useLayoutEffect(() => {
+    if (!calendarRef.current) return;
+
+    const value = getComputedStyle(calendarRef.current)
+      .getPropertyValue("--hour-row-height")
+      .trim();
+
+    if (value) {
+      setRowHeight(Number(value.replace("em", "")));
+    }
+  }, []);
+
+  /* ======================= Utils ======================= */
+
+  const getStartOfWeek = useCallback((date: Date) => {
     const d = new Date(date);
-    const day = d.getDay();
-    const diff = d.getDate() - day;
-    return new Date(d.setDate(diff));
-  };
+    d.setDate(d.getDate() - d.getDay());
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, []);
 
-  const generateWeekDays = (startDate: Date): WeekDay[] => {
-    const days: WeekDay[] = [];
-    const dayLabels = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  const getEndOfWeek = useCallback(
+    (date: Date) => {
+      const d = getStartOfWeek(date);
+      d.setDate(d.getDate() + 6);
+      d.setHours(23, 59, 59, 999);
+      return d;
+    },
+    [getStartOfWeek]
+  );
 
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(startDate);
-      date.setDate(startDate.getDate() + i);
+  const getStartOfMonth = (date: Date) =>
+    new Date(date.getFullYear(), date.getMonth(), 1);
 
-      const dayEvents = events.filter(
-        (e) =>
-          e.date.getFullYear() === date.getFullYear() &&
-          e.date.getMonth() === date.getMonth() &&
-          e.date.getDate() === date.getDate()
-      );
+  const getEndOfMonth = (date: Date) =>
+    new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999);
 
-      const currentDay = new Date(date);
-      currentDay.setHours(0, 0, 0, 0);
+  const generateWeekDays = useCallback(
+    (start: Date): WeekDay[] => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      days.push({
-        label: dayLabels[i],
-        date: date.getDate(),
-        month: date.getMonth(),
-        year: date.getFullYear(),
-        events: dayEvents,
-        isToday: currentDay.getTime() === today.getTime(),
+      return Array.from({ length: 7 }, (_, i) => {
+        const date = new Date(start);
+        date.setDate(start.getDate() + i);
+
+        const normalized = new Date(date);
+        normalized.setHours(0, 0, 0, 0);
+
+        return {
+          label: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"][i],
+          date: date.getDate(),
+          month: date.getMonth(),
+          year: date.getFullYear(),
+          isToday: normalized.getTime() === today.getTime(),
+          events: events.filter(
+            (e) =>
+              e.date.getFullYear() === date.getFullYear() &&
+              e.date.getMonth() === date.getMonth() &&
+              e.date.getDate() === date.getDate()
+          ),
+        };
       });
-    }
+    },
+    [events]
+  );
 
-    return days;
-  };
+  const generateMonthDays = useCallback(
+    (date: Date): MonthDay[] => {
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const firstDay = new Date(year, month, 1).getDay();
+      const lastDate = new Date(year, month + 1, 0).getDate();
 
-  const generateMonthDays = (date: Date): MonthDay[] => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const startingDayOfWeek = firstDay.getDay();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+      const days: MonthDay[] = [];
 
-    const days: MonthDay[] = [];
+      const prevLast = new Date(year, month, 0).getDate();
+      for (let i = firstDay - 1; i >= 0; i--) {
+        days.push({
+          date: prevLast - i,
+          month: month === 0 ? 11 : month - 1,
+          year: month === 0 ? year - 1 : year,
+          isCurrentMonth: false,
+          isToday: false,
+          events: [],
+        });
+      }
 
-    // Previous month days
-    const prevMonthLastDay = new Date(year, month, 0).getDate();
-    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
-      const day = prevMonthLastDay - i;
-      const prevMonth = month - 1;
-      const prevYear = month === 0 ? year - 1 : year;
-      const actualMonth = month === 0 ? 11 : prevMonth;
+      for (let d = 1; d <= lastDate; d++) {
+        const current = new Date(year, month, d);
+        current.setHours(0, 0, 0, 0);
 
-      days.push({
-        date: day,
-        month: actualMonth,
-        year: prevYear,
-        isCurrentMonth: false,
-        isToday: false,
-        events: [],
-      });
-    }
+        days.push({
+          date: d,
+          month,
+          year,
+          isCurrentMonth: true,
+          isToday: current.getTime() === today.getTime(),
+          events: events.filter(
+            (e) =>
+              e.date.getFullYear() === year &&
+              e.date.getMonth() === month &&
+              e.date.getDate() === d
+          ),
+        });
+      }
 
-    // Current month days
-    for (let day = 1; day <= lastDay.getDate(); day++) {
-      const currentDay = new Date(year, month, day);
-      currentDay.setHours(0, 0, 0, 0);
+      let nextDay = 1;
+      while (days.length < 42) {
+        days.push({
+          date: nextDay++,
+          month: month === 11 ? 0 : month + 1,
+          year: month === 11 ? year + 1 : year,
+          isCurrentMonth: false,
+          isToday: false,
+          events: [],
+        });
+      }
 
-      const dayEvents = events.filter(
-        (e) =>
-          e.date.getFullYear() === currentDay.getFullYear() &&
-          e.date.getMonth() === currentDay.getMonth() &&
-          e.date.getDate() === currentDay.getDate()
-      );
+      return days;
+    },
+    [events]
+  );
 
-      days.push({
-        date: day,
-        month,
-        year,
-        isCurrentMonth: true,
-        isToday: currentDay.getTime() === today.getTime(),
-        events: dayEvents,
-      });
-    }
-
-    // Next month days
-    const remainingDays = 42 - days.length;
-    for (let day = 1; day <= remainingDays; day++) {
-      const nextMonth = month + 1;
-      const nextYear = month === 11 ? year + 1 : year;
-      const actualMonth = month === 11 ? 0 : nextMonth;
-
-      days.push({
-        date: day,
-        month: actualMonth,
-        year: nextYear,
-        isCurrentMonth: false,
-        isToday: false,
-        events: [],
-      });
-    }
-
-    return days;
-  };
-
+  /* ======================= Effects ======================= */
   useEffect(() => {
+    let start: Date;
+    let end: Date;
+
     if (viewMode === "week") {
-      const startOfWeek = getStartOfWeek(currentDate);
-      setWeekDays(generateWeekDays(startOfWeek));
+      start = getStartOfWeek(currentDate);
+      end = getEndOfWeek(currentDate);
+      setWeekDays(generateWeekDays(start));
     } else {
+      start = getStartOfMonth(currentDate);
+      end = getEndOfMonth(currentDate);
       setMonthDays(generateMonthDays(currentDate));
     }
-  }, [currentDate, viewMode, events]);
 
-  const formatHour = (hour: number) =>
-    hour === 12 ? "12 PM" : hour > 12 ? `${hour - 12} PM` : `${hour} AM`;
-
-  const getEventStyle = (
-    start: number,
-    duration: number
-  ): React.CSSProperties => {
-    const startOffset = (start - 6) * 80;
-    const height = duration * 80;
-    return { top: `${startOffset}px`, height: `${height}px` };
-  };
-
-  const formatTime = (time: number) => {
-    const hours = Math.floor(time);
-    const minutes = Math.floor((time % 1) * 60);
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-      2,
-      "0"
-    )}`;
-  };
-
-  const goToPrevious = () => {
-    const newDate = new Date(currentDate);
-    if (viewMode === "week") newDate.setDate(currentDate.getDate() - 7);
-    else newDate.setMonth(currentDate.getMonth() - 1);
-    setCurrentDate(newDate);
-  };
-
-  const goToNext = () => {
-    const newDate = new Date(currentDate);
-    if (viewMode === "week") newDate.setDate(currentDate.getDate() + 7);
-    else newDate.setMonth(currentDate.getMonth() + 1);
-    setCurrentDate(newDate);
-  };
-
-  const goToToday = () => setCurrentDate(new Date());
-
-  const getMonthYearDisplay = () => {
-    if (viewMode === "month") {
-      const month = currentDate.toLocaleString("default", { month: "long" });
-      const year = currentDate.getFullYear();
-      return `${month} ${year}`;
+    const rangeKey = `${start.getTime()}-${end.getTime()}`;
+    if (lastRangeRef.current !== rangeKey) {
+      lastRangeRef.current = rangeKey;
+      onRangeChange?.({ from: start, to: end });
     }
+  }, [
+    currentDate,
+    viewMode,
+    generateWeekDays,
+    generateMonthDays,
+    getStartOfWeek,
+    getEndOfWeek,
+    onRangeChange,
+  ]);
 
-    const startOfWeek = getStartOfWeek(currentDate);
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6);
+  /* ======================= Helpers ======================= */
 
-    const startMonth = startOfWeek.toLocaleString("default", { month: "long" });
-    const endMonth = endOfWeek.toLocaleString("default", { month: "long" });
-    const startYear = startOfWeek.getFullYear();
-    const endYear = endOfWeek.getFullYear();
+  const formatHour = (h: number) =>
+    h === 12 ? "12 PM" : h > 12 ? `${h - 12} PM` : `${h} AM`;
 
-    if (startMonth === endMonth && startYear === endYear)
-      return `${startMonth} ${startYear}`;
-    if (startYear === endYear)
-      return `${startMonth} - ${endMonth} ${startYear}`;
-    return `${startMonth} ${startYear} - ${endMonth} ${endYear}`;
+  const formatTime = (t: number) => {
+    const h = Math.floor(t);
+    const m = Math.floor((t % 1) * 60);
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
   };
 
-  const colorMap: { [key in Event["colorClass"]]: string } = {
-    blue: "#4A90E2",
-    yellow: "#FFA500",
-    green: "#4CAF50",
+  const getEventStyle = (start: number, duration: number) => ({
+    top: `${(start - 6) * rowHeight}em`,
+    height: `${duration * rowHeight}em`,
+  });
+
+  const goPrev = () => {
+    const d = new Date(currentDate);
+    if (viewMode === "week") {
+      d.setDate(d.getDate() - 7);
+    } else {
+      d.setMonth(d.getMonth() - 1);
+    }
+    setCurrentDate(d);
   };
+  const goNext = () => {
+    const d = new Date(currentDate);
+    if (viewMode === "week") {
+      d.setDate(d.getDate() + 7);
+    } else {
+      d.setMonth(d.getMonth() + 1);
+    }
+    setCurrentDate(d);
+  };
+
+  const goToday = () => setCurrentDate(new Date());
+
+  const headerTitle = currentDate.toLocaleString("default", {
+    month: "long",
+    year: "numeric",
+  });
+
+  /* ======================= Render ======================= */
 
   return (
-    <div className={cx("calendar")}>
+    <div ref={calendarRef} className={cx("calendar")}>
       {/* Header */}
       <div className={cx("header")}>
         <div className={cx("header__nav")}>
-          <button
-            onClick={goToPrevious}
-            className={cx("header__nav-btn", "left")}
-          >
+          <button className={cx("header__nav-btn")} onClick={goPrev}>
             <Icon icon="iconamoon:arrow-left-2-bold" />
           </button>
-          <button
-            onClick={goToToday}
-            className={cx("header__nav-btn", "today")}
-          >
+          <button className={cx("header__nav-btn", "today")} onClick={goToday}>
             Today
           </button>
-          <button onClick={goToNext} className={cx("header__nav-btn", "right")}>
+          <button className={cx("header__nav-btn")} onClick={goNext}>
             <Icon icon="iconamoon:arrow-right-2-bold" />
           </button>
         </div>
-        <div className={cx("header__date")}>{getMonthYearDisplay()}</div>
+
+        <div className={cx("header__date")}>{headerTitle}</div>
+
         <div className={cx("header__mode")}>
           <button
             className={cx("header__mode-btn", { active: viewMode === "week" })}
@@ -272,86 +327,95 @@ const Calendar: React.FC<CalendarProps> = ({ events = [] }) => {
         </div>
       </div>
 
-      {/* Calendar Content */}
+      {/* WEEK VIEW */}
       {viewMode === "week" ? (
-        <div className={cx("week-view")}>
-          <div className={cx("week-days-header")}>
-            <div></div>
-            {weekDays.map((day, idx) => (
-              <div key={idx} className={cx("day-cell")}>
-                <div className={cx("day-label")}>{day.label}</div>
-                <div className={cx("day-number", { today: day.isToday })}>
-                  {day.date}
+        <div className={cx("calendar__week")}>
+          <div className={cx("calendar__week-header")}>
+            <div />
+            {weekDays.map((d, i) => (
+              <div key={i} className={cx("day")}>
+                <div className={cx("day-label")}>{d.label}</div>
+                <div className={cx("day-number", { today: d.isToday })}>
+                  {d.date}
                 </div>
               </div>
             ))}
           </div>
-          <div className={cx("week-time-grid")}>
-            <div className={cx("time-column")}>
-              {hours.map((hour) => (
-                <div key={hour} className={cx("time-cell")}>
-                  {formatHour(hour)}
+
+          <div className={cx("calendar__week-body")}>
+            <div className={cx("unit-column")}>
+              {hours.map((h) => (
+                <div key={h} className={cx("unit-cell")}>
+                  {formatHour(h)}
                 </div>
               ))}
             </div>
-            {weekDays.map((day, dayIdx) => (
-              <div
-                key={dayIdx}
-                className={cx("day-column", { today: day.isToday })}
-              >
-                {hours.map((hour) => (
-                  <div key={hour} className={cx("hour-cell")}></div>
+
+            {weekDays.map((day, i) => (
+              <div key={i} className={cx("day-column")}>
+                {hours.map((h) => (
+                  <div key={h} className={cx("day-cell")} />
                 ))}
-                {day.events.map((event, eventIndex) => (
-                  <div
-                    key={eventIndex}
-                    className={cx("event")}
-                    style={{
-                      ...getEventStyle(event.start, event.duration),
-                      backgroundColor: colorMap[event.colorClass],
-                      borderLeft: `4px solid ${colorMap[event.colorClass]}`,
-                    }}
-                  >
-                    <div className={cx("event-time")}>
-                      {formatTime(event.start)} —{" "}
-                      {formatTime(event.start + event.duration)}
+
+                {day.events.map((ev, idx) => {
+                  const color = getEventColor(idx);
+                  return (
+                    <div
+                      key={idx}
+                      className={cx("event")}
+                      style={{
+                        ...getEventStyle(ev.start, ev.duration),
+                        backgroundColor: hexToRgba(color, 0.6),
+                        borderLeft: `4px solid ${color}`,
+                      }}
+                    >
+                      <div className={cx("event-time")}>
+                        {formatTime(ev.start)} –{" "}
+                        {formatTime(ev.start + ev.duration)}
+                      </div>
+                      <div className={cx("event-title")}>{ev.title}</div>
                     </div>
-                    <div className={cx("event-title")}>{event.title}</div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ))}
           </div>
         </div>
       ) : (
+        /* MONTH VIEW */
         <div className={cx("month-view")}>
           <div className={cx("month-days-header")}>
-            {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((day) => (
-              <div key={day} className={cx("month-day-label")}>
-                {day}
+            {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((d) => (
+              <div key={d} className={cx("month-day-label")}>
+                {d}
               </div>
             ))}
           </div>
+
           <div className={cx("month-grid")}>
-            {monthDays.map((day, idx) => (
+            {monthDays.map((d, i) => (
               <div
-                key={idx}
+                key={i}
                 className={cx("month-day-cell", {
-                  otherMonth: !day.isCurrentMonth,
+                  otherMonth: !d.isCurrentMonth,
                 })}
               >
-                <div className={cx("month-day-number", { today: day.isToday })}>
-                  {day.date}
+                <div className={cx("month-day-number", { today: d.isToday })}>
+                  {d.date}
                 </div>
-                {day.events.map((event, eventIdx) => (
-                  <div
-                    key={eventIdx}
-                    className={cx("month-event")}
-                    style={{ backgroundColor: colorMap[event.colorClass] }}
-                  >
-                    {event.title}
-                  </div>
-                ))}
+
+                {d.events.map((ev, idx) => {
+                  const color = getEventColor(idx);
+                  return (
+                    <div
+                      key={idx}
+                      className={cx("month-event")}
+                      style={{ backgroundColor: hexToRgba(color, 0.65) }}
+                    >
+                      {ev.title}
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -359,6 +423,6 @@ const Calendar: React.FC<CalendarProps> = ({ events = [] }) => {
       )}
     </div>
   );
-};
+}
 
 export default Calendar;

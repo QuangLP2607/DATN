@@ -1,15 +1,38 @@
-import type { JitsiRoomResponse } from "@/interfaces/jitsi";
 import type { ApiResponse } from "@/interfaces/common";
-import type { CreateRoomInput, JoinRoomInput } from "@/interfaces/jitsi";
 import apiClient from "./apiClient";
 
+// ===== Types ================================================================
+export interface CreateRoomInput {
+  roomName: string;
+  classId: string;
+}
+
+export interface JoinRoomInput {
+  roomName: string;
+}
+
+export interface LeaveRoomInput {
+  roomId: string;
+}
+
+export interface PingRoomInput {
+  roomId: string;
+}
+
+export interface JitsiRoomResponse {
+  roomId: string;
+  token: string;
+}
+
+// ===== API ================================================================
 const jitsiApi = {
   async createRoom(payload: CreateRoomInput): Promise<JitsiRoomResponse> {
     const res = await apiClient.post<ApiResponse<JitsiRoomResponse>>(
       "/live-room/create",
       payload
     );
-    return res.data.data!;
+    if (!res.data.data) throw new Error("No data returned");
+    return res.data.data;
   },
 
   async joinRoom(payload: JoinRoomInput): Promise<JitsiRoomResponse> {
@@ -17,7 +40,16 @@ const jitsiApi = {
       "/live-room/join",
       payload
     );
-    return res.data.data!;
+    if (!res.data.data) throw new Error("No data returned");
+    return res.data.data;
+  },
+
+  async leaveRoom(payload: LeaveRoomInput) {
+    await apiClient.post("/live-room/leave", payload);
+  },
+
+  async pingRoom(payload: PingRoomInput) {
+    await apiClient.post("/live-room/ping", payload);
   },
 };
 

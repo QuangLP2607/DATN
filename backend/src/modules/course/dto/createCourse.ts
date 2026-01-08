@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { stringSchema } from "@/utils/zod";
 
 export const CreateCourseSchema = z
   .object({
-    code: z.string().min(1, { message: "Code is required" }),
-    name: z.string().min(1, { message: "Name is required" }),
-    description: z.string().optional(),
+    code: stringSchema("Code", 1, 20),
+    name: stringSchema("Name", 3, 50),
+    description: stringSchema("Description").optional(),
     status: z.enum(["active", "inactive"]),
   })
   .strict();

@@ -1,10 +1,10 @@
-@use "./variables" as vars;
+@use "@/styles/variables" as *;
 
-// Global Reset
+/* ------------ Global Reset ------------ */
 * {
   margin: 0;
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+  // -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -13,26 +13,28 @@ html {
 }
 
 body {
-  background-color: var(--color-bg-default);
-  font-family: vars.$font-primary;
-  color: var(--color-text-primary);
+  background-color: color(bg-default);
+  color: color(text-primary);
   font-size: 1.4rem;
+  font-family: $font-primary;
 }
 
 #root {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: visible;
 
   > * {
     flex: 1;
+    min-height: 0;
   }
 }
 
-//-------- Reset styles for common elements --------
+/* ------------ Reset styles for common elements ------------ */
 a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
 }
 
 ul {
@@ -44,30 +46,34 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  filter: brightness(0.97);
-}
-
-button:active {
-  transform: scale(0.97);
-}
-
 input {
+  color: color(text-secondary);
+  background-color: transparent;
   outline: none;
+  padding: 0;
 }
 
 select {
   outline: none;
 }
 
-// ------------ Custom Scrollbar ------------
+hr {
+  border: none;
+  height: 0.5px;
+  background: color(border-muted);
+}
+
+/* ------------ Global Custom Scrollbar ------------ */
+/* Firefox */
 * {
   scrollbar-width: thin;
   scrollbar-color: #c1c1c1 transparent;
 }
 
+/* Chrome, Edge, Safari */
 *::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 *::-webkit-scrollbar-track {
@@ -81,4 +87,12 @@ select {
 
 *::-webkit-scrollbar-thumb:hover {
   background-color: #9b9b9b;
+}
+
+/* ------------ Fix autofill color ------------ */
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: color(text-primary);
+  caret-color: color(text-primary);
+  transition: background-color 9999s ease-in-out 0s;
 }

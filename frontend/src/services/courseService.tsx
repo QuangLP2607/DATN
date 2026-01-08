@@ -1,42 +1,69 @@
 import apiClient from "./apiClient";
-
-import type { ApiResponse } from "@interfaces/common";
 import type {
-  Course,
-  CreateCoursePayload,
+  ApiResponse,
+  ListParams,
   PaginatedResponse,
-  UpdateCoursePayload,
-} from "@interfaces/course";
+} from "@/interfaces/common";
+import type { Course } from "@/interfaces/course";
+import type { Class } from "@/interfaces/class";
 
-// ====== COURSE API ======
+// ===== Types ================================================================
+export interface SearchCourseResponse extends Course {
+  total_classes: number;
+  active_classes: number;
+}
+
+export type CreateCoursePayload = Pick<Course, "code" | "name" | "status">;
+
+export type UpdateCoursePayload = Partial<
+  Pick<Course, "code" | "name" | "status">
+>;
+
+export interface getByIdResponse {
+  course: SearchCourseResponse;
+  classes: (Pick<
+    Class,
+    "id" | "name" | "start_date" | "end_date" | "status"
+  > & {
+    teachers?: { id: string; name: string; email?: string }[];
+  })[];
+}
+
+// ===== API ================================================================
 const courseApi = {
-  // CREATE
-  createCourse: (payload: CreateCoursePayload) =>
-    apiClient.post<ApiResponse<Course>>("course", payload),
+  async create(payload: CreateCoursePayload): Promise<Course> {
+    const res = await apiClient.post<ApiResponse<Course>>("course", payload);
+    return res.data.data!;
+  },
 
-  // GET ALL (with pagination, search, sort) - đồng bộ với userApi
-  getAllCourses: (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-    sort?: string;
-    order?: "asc" | "desc";
-  }) =>
-    apiClient.get<ApiResponse<PaginatedResponse<Course>>>("course", {
-      params,
-    }),
+  async search(
+    params?: ListParams
+  ): Promise<PaginatedResponse<"courses", SearchCourseResponse>> {
+    const res = await apiClient.get<
+      ApiResponse<PaginatedResponse<"courses", SearchCourseResponse>>
+    >("course", { params });
+    return res.data.data!;
+  },
 
-  // GET BY ID
-  getCourseById: (id: string) =>
-    apiClient.get<ApiResponse<Course>>(`course/${id}`),
+  async getById(id: string): Promise<getByIdResponse> {
+    const res = await apiClient.get<ApiResponse<getByIdResponse>>(
+      `course/${id}`
+    );
+    return res.data.data!;
+  },
 
-  // UPDATE
-  updateCourse: (id: string, payload: UpdateCoursePayload) =>
-    apiClient.put<ApiResponse<Course>>(`course/${id}`, payload),
+  async update(id: string, payload: UpdateCoursePayload): Promise<Course> {
+    const res = await apiClient.put<ApiResponse<Course>>(
+      `course/${id}`,
+      payload
+    );
+    return res.data.data!;
+  },
 
-  // DELETE
-  deleteCourse: (id: string) =>
-    apiClient.delete<ApiResponse<null>>(`course/${id}`),
+  async delete(id: string): Promise<null> {
+    const res = await apiClient.delete<ApiResponse<null>>(`course/${id}`);
+    return res.data.data!;
+  },
 };
 
 export default courseApi;

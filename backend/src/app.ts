@@ -10,14 +10,17 @@ import classRoutes from "@/modules/class/router";
 import scheduleRoutes from "@/modules/schedule/router";
 import sessionsRoutes from "./modules/session/router";
 import enrollmentRoutes from "@/modules/enrollment/router";
-// import statsRoutes from "@/modules/stats/router";
+import statsRoutes from "@/modules/stats/router";
+import quizRoutes from "@/modules/quiz/router";
 import mediaRoutes from "@/modules/media/router";
+import lectureRoutes from "@/modules/lecture/router";
 import liveRoomRoutes from "@/modules/liveRoom/router";
 
 const app = express();
+
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://10.155.190.198:5173"],
+    origin: ["http://localhost:5173", "http://192.168.0.3:5173"],
     credentials: true,
   })
 );
@@ -35,7 +38,9 @@ app.use("/api/sessions", sessionsRoutes);
 app.use("/api/enrollment", enrollmentRoutes);
 app.use("/api/live-room", liveRoomRoutes);
 app.use("/api/media", mediaRoutes);
-// app.use("/api/stats", statsRoutes);
+app.use("/api/lecture", lectureRoutes);
+app.use("/api/quiz", quizRoutes);
+app.use("/api/stats", statsRoutes);
 
 // 404 handler
 app.use(notFoundHandler);

@@ -1,9 +1,35 @@
+@use "@/styles" as *;
+
 .schedule {
   display: flex;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: var(--color-main-bg);
+  font-size: 1rem;
+
+  @include respond-to(tablet) {
+    font-size: 0.8rem;
+  }
+
+  @include respond-to(mobile) {
+    justify-content: start;
+    font-size: 0.7rem;
+  }
+}
+
+.schedule {
+  position: relative;
+
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    pointer-events: none; // vẫn cho Calendar tương tác nếu muốn
+  }
 }

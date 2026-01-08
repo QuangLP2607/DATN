@@ -9,51 +9,22 @@ const sessionSchema = new Schema<ISession>(
       required: true,
       index: true,
     },
-
     schedule_id: {
       type: Schema.Types.ObjectId,
       ref: "Schedule",
       required: true,
     },
-
-    week_number: {
-      type: Number,
-      required: true,
-      min: 1,
-    },
-
-    date: {
-      type: Date,
-      required: true,
-      index: true,
-    },
-
-    start_time: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 1439,
-    },
-
-    end_time: {
-      type: Number,
-      required: true,
-      min: 1,
-      max: 1440,
-    },
-
+    week_number: { type: Number, required: true, min: 1 },
+    date: { type: Date, required: true, index: true },
+    start_time: { type: Number, required: true, min: 0, max: 1439 },
+    end_time: { type: Number, required: true, min: 1, max: 1440 },
     status: {
       type: String,
       enum: ["upcoming", "active", "finished", "cancelled"],
       default: "upcoming",
       index: true,
     },
-
-    note: {
-      type: String,
-      trim: true,
-      maxlength: 255,
-    },
+    note: { type: String, trim: true, maxlength: 255 },
   },
   { timestamps: true }
 );

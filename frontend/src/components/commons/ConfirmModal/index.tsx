@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import styles from "./ConfirmModal.module.scss";
-
+import Overlay from "@/components/ui/Overlay";
 import { Icon } from "@iconify/react";
 
 const cx = classNames.bind(styles);
@@ -11,6 +11,8 @@ export interface ConfirmModalProps {
   message?: string;
   confirmText?: string;
   cancelText?: string;
+  cancelVariant?: "primary" | "secondary" | "default" | "danger" | "success";
+  confirmVariant?: "primary" | "secondary" | "default" | "danger" | "success";
   onCancel: () => void;
   onConfirm: () => void;
 }
@@ -21,13 +23,15 @@ export default function ConfirmModal({
   message,
   confirmText = "Xác nhận",
   cancelText = "Hủy",
+  cancelVariant = "default",
+  confirmVariant = "danger",
   onCancel,
   onConfirm,
 }: ConfirmModalProps) {
   if (!open) return null;
 
   return (
-    <div className={cx("overlay")}>
+    <Overlay open={open} onClose={onCancel} closeOnBackdropClick={false}>
       <div className={cx("modal")}>
         {/* Header */}
         <div className={cx("header")}>
@@ -42,14 +46,14 @@ export default function ConfirmModal({
 
         {/* Footer actions */}
         <div className={cx("actions")}>
-          <button className={cx("btn", "cancel")} onClick={onCancel}>
+          <button className={cx("btn", cancelVariant)} onClick={onCancel}>
             {cancelText}
           </button>
-          <button className={cx("btn", "submit")} onClick={onConfirm}>
+          <button className={cx("btn", confirmVariant)} onClick={onConfirm}>
             {confirmText}
           </button>
         </div>
       </div>
-    </div>
+    </Overlay>
   );
 }

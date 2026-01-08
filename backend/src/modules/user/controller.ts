@@ -1,25 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import Service from "./service";
 import { Res } from "@/core/response";
+import Service from "./service";
 
 export default {
   // ------------------------------ get profile ------------------------------
   getProfile: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = req.user!;
-      const profile = await Service.getProfile(user);
+      const profile = await Service.getProfile(req.user!);
       return Res.success(res, "Profile retrieved successfully", profile);
-    } catch (error) {
-      next(error);
-    }
-  },
-
-  // ------------------------------ get full profile ------------------------------
-  getFullProfile: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const user = req.user!;
-      const profile = await Service.getFullProfile(user);
-      return Res.success(res, "Full profile retrieved successfully", profile);
     } catch (error) {
       next(error);
     }
@@ -28,8 +16,7 @@ export default {
   // -------------------- update profile --------------------
   updateProfile: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = req.user!;
-      await Service.updateProfile(user, req.validated.body);
+      await Service.updateProfile(req.user!, req.validated.body);
       return Res.success(res, "Profile updated successfully");
     } catch (error) {
       next(error);
@@ -39,8 +26,7 @@ export default {
   // ------------------------------ change password ------------------------------
   changePassword: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = req.user!;
-      await Service.changePassword(user.id, req.validated.body);
+      await Service.changePassword(req.user!.id, req.validated.body);
       return Res.success(res, "Password changed successfully");
     } catch (error) {
       next(error);
@@ -50,7 +36,7 @@ export default {
   // ------------------------------ get user by id ------------------------------
   getUserById: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const profile = await Service.getUserById(req.validated.params);
+      const profile = await Service.getUserById(req.validated.params.id);
       return Res.success(res, "Profile retrieved successfully", profile);
     } catch (error) {
       next(error);

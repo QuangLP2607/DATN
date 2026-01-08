@@ -62,7 +62,6 @@ apiClient.interceptors.response.use(
 
         localStorage.removeItem("accessToken");
         localStorage.removeItem("userRole");
-        window.location.href = "/login";
 
         return Promise.reject(
           (refreshError as { response?: { data?: unknown } })?.response?.data ??

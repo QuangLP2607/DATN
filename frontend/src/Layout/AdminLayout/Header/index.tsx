@@ -9,20 +9,21 @@ export default function AdminHeader() {
 
   return (
     <Header
-      avatarUrl="https://i.pravatar.cc/150?img=12"
       logout={handleLogout}
-      menuItems={[
-        { icon: "mdi:account", label: "Profile", href: "/profile" },
-        {
-          icon: "mdi:cog",
-          label: "Settings",
-          onClick: () => alert("Settings"),
-        },
-      ]}
-      notifications={[
-        { id: 1, title: "Bạn có 1 tin nhắn mới", href: "/messages" },
-        { id: 2, title: "Hệ thống cập nhật", description: "Phiên bản 2.1" },
-      ]}
+      menuItems={
+        [
+          // { icon: "mdi:account", label: "Profile", href: "/profile" },
+          //   {
+          //     icon: "mdi:cog",
+          //     label: "Settings",
+          //     onClick: () => alert("Settings"),
+          //   },
+          // ]}
+          // notifications={[
+          //   { id: 1, title: "Bạn có 1 tin nhắn mới", href: "/messages" },
+          //   { id: 2, title: "Hệ thống cập nhật", description: "Phiên bản 2.1" },
+        ]
+      }
     />
   );
 }

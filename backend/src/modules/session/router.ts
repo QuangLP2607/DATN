@@ -3,12 +3,10 @@ import Controller from "./controller";
 import { authMiddleware } from "@/middlewares/auth";
 import { roleMiddleware } from "@/middlewares/role";
 import { validateZod } from "@/middlewares/validateZod";
+import { paramIdSchema } from "@/utils/zod";
 import { SearchSessionSchema } from "./dto/searchSession";
 import { CreateSessionSchema } from "./dto/createSession";
-import {
-  SessionIdParamsSchema,
-  UpdateSessionSchema,
-} from "./dto/updateSession";
+import { UpdateSessionSchema } from "./dto/updateSession";
 
 const router = Router();
 
@@ -27,7 +25,7 @@ router.patch(
   "/:id",
   roleMiddleware(["TEACHER", "ADMIN"]),
   validateZod({
-    params: SessionIdParamsSchema,
+    params: paramIdSchema(),
     body: UpdateSessionSchema,
   }),
   Controller.update

@@ -1,75 +1,93 @@
+@use "@/styles" as *;
+
 .dropdown {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  position: relative;
+  @include flex(row, center, center, 5px);
 
-  &__label {
-    // font-weight: 500;
-    color: var(--color-text);
+  &-wrapper {
+    @include flex(row, start, center, 10px);
   }
 
-  /* control box */
-  &__control {
-    position: relative;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background: #fff;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-width: 140px;
-    transition: border-color 0.2s;
-
-    &:hover {
-      border-color: #888;
-    }
-  }
-
-  /* arrow */
-  &__arrow {
-    transition: transform 0.2s ease;
-
-    &.open {
-      transform: rotate(180deg);
-    }
-  }
-
-  /* menu list */
-  &__menu {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    width: 100%;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-    padding: 6px 0;
-    z-index: 20;
-    animation: fadeIn 0.15s ease-out;
+  &-label {
+    white-space: nowrap;
   }
 
   @keyframes fadeIn {
     from {
-      opacity: 0;
       transform: translateY(-4px);
+      opacity: 0;
     }
     to {
-      opacity: 1;
       transform: translateY(0);
+      opacity: 1;
     }
   }
 
-  /* item */
+  /* ================= CONTROL ================= */
+  &__control {
+    padding: 8px 12px;
+    min-width: 140px;
+    border: 1px solid color(border-default);
+    border-radius: 4px;
+    background-color: color(bg-paper);
+    color: color(text-primary);
+    cursor: pointer;
+    user-select: none;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    transition: border-color 0.2s ease;
+
+    &.open {
+      border-color: color(border-focus);
+    }
+
+    /* Arrow */
+    &-arrow {
+      display: inline-flex;
+      transition: transform 0.25s ease;
+      transform-origin: center;
+
+      &.open {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  /* ================= MENU ================= */
+  &__menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 10;
+
+    width: 100%;
+    padding: 4px;
+    border: 1px solid color(border-default);
+    border-radius: 4px;
+    background-color: color(bg-paper);
+    box-shadow: var(--shadow-sm);
+
+    animation: fadeIn 0.15s ease-out;
+  }
+
+  /* ================= ITEM ================= */
   &__item {
     padding: 8px 12px;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background 0.15s;
+    color: color(text-primary);
+
+    transition: background-color 0.15s ease;
 
     &:hover {
-      background: #f2f2f2;
+      background-color: color(bg-muted);
+    }
+
+    &.selected {
+      background-color: color(primary-subtle);
     }
   }
 }

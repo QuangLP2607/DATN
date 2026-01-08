@@ -1,9 +1,11 @@
 import express from "express";
-import { createRoom, joinRoom } from "./controller";
+import Controller from "./controller";
 import { authMiddleware } from "@/middlewares/auth";
 import { validateZod } from "@/middlewares/validateZod";
 import { roleMiddleware } from "@/middlewares/role";
-import { CreateLiveRoomSchema, JoinLiveRoomSchema } from "./dto/liveRoom";
+import { CreateLiveRoomSchema } from "./dto/create";
+import { JoinLiveRoomSchema } from "./dto/join";
+import { paramIdSchema } from "@/utils/zod";
 
 const router = express.Router();
 
@@ -12,14 +14,27 @@ router.post(
   authMiddleware,
   roleMiddleware(["TEACHER", "ADMIN"]),
   validateZod({ body: CreateLiveRoomSchema }),
-  createRoom
+  Controller.createRoom
 );
 
 router.post(
   "/join",
   authMiddleware,
   validateZod({ body: JoinLiveRoomSchema }),
-  joinRoom
+  Controller.joinRoom
+);
+
+router.post(
+  "/:id/leave",
+  authMiddleware,
+  validateZod({ params: paramIdSchema() }),
+  Controller.leaveRoom
+);
+router.post(
+  "/:id/ping",
+  authMiddleware,
+  validateZod({ params: paramIdSchema() }),
+  Controller.pingRoom
 );
 
 export default router;

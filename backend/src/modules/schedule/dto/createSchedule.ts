@@ -1,10 +1,9 @@
 import { z } from "zod";
-
-const objectId = z.string().regex(/^[0-9a-fA-F]{24}$/);
+import { objectIdSchema, timeStringSchema } from "@/utils/zod";
 
 export const CreateScheduleSchema = z
   .object({
-    class_id: objectId,
+    class_id: objectIdSchema,
     day_of_week: z.enum([
       "monday",
       "tuesday",
@@ -14,8 +13,8 @@ export const CreateScheduleSchema = z
       "saturday",
       "sunday",
     ]),
-    start_time: z.number().min(0).max(1439),
-    end_time: z.number().min(1).max(1440),
+    start_time: timeStringSchema,
+    end_time: timeStringSchema,
     note: z.string().optional(),
   })
   .refine((data) => data.start_time < data.end_time, {

@@ -1,18 +1,59 @@
 import { Router } from "express";
-import { Controller } from "./controller";
+import Controller from "./controller";
+import { authMiddleware } from "@/middlewares/auth";
+import { roleMiddleware } from "@/middlewares/role";
+import { validateZod } from "@/middlewares/validateZod";
+import { CreateUploadUrlSchema } from "./dto/createUploadUrl";
+import { paramIdSchema } from "@/utils/zod";
+import { CreateMediaSchema } from "./dto/create";
+import { UpdateMediaSchema } from "./dto/update";
 
 const router = Router();
 
-// tạo presigned PUT URL
-router.post("/upload-url", Controller.getUploadUrl);
+router.post(
+  "/upload-url",
+  authMiddleware,
+  validateZod({ body: CreateUploadUrlSchema }),
+  Controller.createUploadUrl
+);
 
-// lưu metadata sau khi upload thành công
-router.post("/save", Controller.saveMedia);
+router.get(
+  "/:id/view-url",
+  authMiddleware,
+  validateZod({ params: paramIdSchema() }),
+  Controller.getViewUrl
+);
 
-// lấy list
-router.get("/class/:classId", Controller.getMediaByClass);
+router.get(
+  "/:id/download-url",
+  authMiddleware,
+  validateZod({ params: paramIdSchema() }),
+  Controller.getDownloadUrl
+);
 
-// lấy pre-signed GET URL để view (query param ?fileKey=...)
-router.get("/view-url", Controller.getViewUrl);
+router.post(
+  "/",
+  authMiddleware,
+  validateZod({ body: CreateMediaSchema }),
+  Controller.create
+);
+
+router.patch(
+  "/:id",
+  authMiddleware,
+  roleMiddleware(["TEACHER", "ADMIN"]),
+  validateZod({
+    params: paramIdSchema(),
+    body: UpdateMediaSchema,
+  }),
+  Controller.update
+);
+
+router.delete(
+  "/:id",
+  authMiddleware,
+  validateZod({ params: paramIdSchema() }),
+  Controller.delete
+);
 
 export default router;

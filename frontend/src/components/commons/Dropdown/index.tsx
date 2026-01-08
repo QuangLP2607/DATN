@@ -1,54 +1,60 @@
-import { useEffect,useRef, useState } from "react";
+import { useRef, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./Dropdown.module.scss";
-
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { Icon } from "@iconify/react";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 const cx = classNames.bind(styles);
 
-interface Option {
+export interface Option<T> {
   label: string;
-  value: string | number;
+  value: T;
 }
 
-interface DropdownProps {
-  value: string | number;
-  onChange: (value: string | number) => void;
-  options: Option[];
+interface DropdownProps<T> {
+  value: T;
+  onChange: (value: T) => void;
+  options: Option<T>[];
   label?: string;
 }
 
-export function Dropdown({ value, onChange, options, label }: DropdownProps) {
+export function Dropdown<T>({
+  value,
+  onChange,
+  options,
+  label,
+}: DropdownProps<T>) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const selected = options.find((o) => o.value === value);
 
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
+  useClickOutside(ref, () => setOpen(false));
 
   return (
-    <div className={cx("dropdown")} ref={ref}>
-      {label && <span className={cx("dropdown__label")}>{label}</span>}
+    <div className={cx("dropdown-wrapper")}>
+      {label && <label className={cx("dropdown-label")}>{label}</label>}
+      <div className={cx("dropdown")} ref={ref}>
+        <div
+          className={cx("dropdown__control")}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span className={cx("dropdown__control-value")}>
+            {selected?.label ?? "—"}
+          </span>
+          <span className={cx("dropdown__control-arrow", { open })}>
+            <Icon icon="iconamoon:arrow-down-2-bold" />
+          </span>
+        </div>
 
-      <div className={cx("dropdown__control")} onClick={() => setOpen(!open)}>
-        <span>{selected?.label}</span>
-        <span className={cx("dropdown__arrow", { open })}>
-          <Icon icon="iconamoon:arrow-down-2-bold" />
-        </span>
         {open && (
           <ul className={cx("dropdown__menu")}>
-            {options.map((opt) => (
+            {options.map((opt, idx) => (
               <li
-                key={opt.value}
-                className={cx("dropdown__item")}
+                key={idx}
+                className={cx("dropdown__item", {
+                  selected: opt.value === value,
+                })}
                 onClick={() => {
                   onChange(opt.value);
                   setOpen(false);
@@ -58,7 +64,7 @@ export function Dropdown({ value, onChange, options, label }: DropdownProps) {
               </li>
             ))}
           </ul>
-        )}{" "}
+        )}
       </div>
     </div>
   );

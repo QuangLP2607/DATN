@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import classNames from "classnames/bind";
+import { ClassProvider } from "@/contexts/ClassContext";
 import TeacherFooter from "./Footer";
 import TeacherHeader from "./Header";
 import TeacherSidebar from "./Sidebar";
@@ -21,14 +22,27 @@ const TeacherLayout = ({
   showFooter = true,
 }: TeacherLayoutProps) => {
   return (
-    <div className={cx("wrapper")}>
-      {showSidebar && <TeacherSidebar />}
-      <div className={cx("wrapper__content")}>
-        {showHeader && <TeacherHeader />}
-        <main className={cx("wrapper__content--main")}>{children}</main>
-        {showFooter && <TeacherFooter />}
+    <ClassProvider>
+      <div className={cx("wrapper")}>
+        {showSidebar && <TeacherSidebar />}
+
+        <div className={cx("wrapper__content")}>
+          {showHeader && (
+            <div className={cx("wrapper__content--header")}>
+              <TeacherHeader />
+            </div>
+          )}
+
+          <main className={cx("wrapper__content--main")}>{children}</main>
+
+          {showFooter && (
+            <div className={cx("wrapper__content--footer")}>
+              <TeacherFooter />
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </ClassProvider>
   );
 };
 

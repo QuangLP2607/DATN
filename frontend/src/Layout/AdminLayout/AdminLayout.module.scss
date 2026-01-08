@@ -1,25 +1,40 @@
 .wrapper {
-  flex: 1;
   display: flex;
-  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: visible;
 
   &__content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    width: 100%;
+    align-items: center;
+    overflow: hidden;
+
+    &--header {
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    &--main {
+      position: relative;
+      flex: 1;
+      padding: 20px;
+      overflow-x: auto;
+      width: 100%;
+      max-width: 1440px;
+      display: flex;
+      min-height: 0;
+
+      > :first-child {
+        margin: 0 auto;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &--footer {
+      width: 100%;
+      flex-shrink: 0;
+    }
   }
-}
-
-.main-container {
-  flex: 1;
-  position: relative;
-  @include mixins.flex(row, center, center);
-}
-
-.main {
-  max-width: 1600px;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
 }

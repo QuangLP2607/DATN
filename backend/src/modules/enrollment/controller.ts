@@ -1,29 +1,34 @@
 import { Request, Response, NextFunction } from "express";
-import Service from "./service";
 import { Res } from "@/core/response";
+import Service from "./service";
 
 export default {
-  // -------------------- get my enrollments --------------------
-  getMyEnrollments: async (req: Request, res: Response, next: NextFunction) => {
+  // -------------------- get my enrollments (student) --------------------
+  getMy: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = req.user!;
-      const result = await Service.getByStudentId(user.id);
+      const result = await Service.getMy(user.id);
       return Res.success(res, "Get my enrollments successfully", result);
     } catch (error) {
       next(error);
     }
   },
 
-  // -------------------- get enrollment by student id --------------------
-  getByStudentId: async (req: Request, res: Response, next: NextFunction) => {
+  // -------------------- get enrollment by class --------------------
+  getByClass: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.validated.params;
-      const result = await Service.getByStudentId(id);
-      return Res.success(
-        res,
-        "Get enrollments by student id successfully",
-        result
-      );
+      const result = await Service.getByClass(req.validated.params.id);
+      return Res.success(res, "Search enrollments successfully", result);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // -------------------- search enrollment by student --------------------
+  searchByStudent: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await Service.searchByStudent(req.validated.params.id);
+      return Res.success(res, "Search enrollments successfully", result);
     } catch (error) {
       next(error);
     }
@@ -42,7 +47,7 @@ export default {
   // -------------------- unenroll (rare case) --------------------
   remove: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await Service.remove(req.validated.params);
+      await Service.remove(req.validated.params.id);
       return Res.success(res, "Unenrolled successfully");
     } catch (error) {
       next(error);

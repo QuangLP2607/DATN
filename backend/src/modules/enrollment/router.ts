@@ -3,24 +3,34 @@ import Controller from "./controller";
 import { authMiddleware } from "@/middlewares/auth";
 import { roleMiddleware } from "@/middlewares/role";
 import { validateZod } from "@/middlewares/validateZod";
+import { paramIdSchema } from "@/utils/zod";
 import { CreateEnrollmentSchema } from "./dto/createEnrollment";
-import { EnrollmentIdParamsSchema } from "./dto/deleteEnrollment";
 
 const router = Router();
 
-router.use(authMiddleware);
+router.get(
+  "/me",
+  authMiddleware,
+  roleMiddleware(["STUDENT"]),
+  Controller.getMy
+);
 
-router.get("/me", Controller.getMyEnrollments);
+router.get(
+  "/class/:id",
+  authMiddleware,
+  validateZod({ params: paramIdSchema() }),
+  Controller.getByClass
+);
 
 router.get(
   "/student/:id",
-  roleMiddleware(["ADMIN", "TEACHER"]),
-  validateZod({ params: EnrollmentIdParamsSchema }),
-  Controller.getByStudentId
+  authMiddleware,
+  validateZod({ params: paramIdSchema() }),
+  Controller.searchByStudent
 );
-
 router.post(
   "/",
+  authMiddleware,
   roleMiddleware(["ADMIN"]),
   validateZod({ body: CreateEnrollmentSchema }),
   Controller.create
@@ -28,8 +38,9 @@ router.post(
 
 router.delete(
   "/:id",
+  authMiddleware,
   roleMiddleware(["ADMIN"]),
-  validateZod({ params: EnrollmentIdParamsSchema }),
+  validateZod({ params: paramIdSchema() }),
   Controller.remove
 );
 

@@ -1,14 +1,27 @@
-import type {
-  LoginPayload,
-  LoginResponse,
-  SignupPayload,
-  SignupResponse,
-} from "@/interfaces/auth";
 import type { ApiResponse } from "@/interfaces/common";
 import apiClient from "./apiClient";
+import type { User, Role } from "@/interfaces/user";
 
+// ===== Types ================================================================
+export interface LoginPayload extends Pick<User, "email"> {
+  password: string;
+}
+
+export interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  role: Role;
+}
+
+export interface SignupPayload
+  extends Pick<User, "email" | "username" | "role"> {
+  password: string;
+}
+
+export type SignupResponse = Pick<User, "id">;
+
+// ===== API ==================================================================
 const authApi = {
-  // ================= LOGIN =================
   async login(payload: LoginPayload): Promise<LoginResponse> {
     const res = await apiClient.post<ApiResponse<LoginResponse>>(
       "/auth/login",
@@ -18,7 +31,6 @@ const authApi = {
     return res.data.data!;
   },
 
-  // ================= SIGNUP =================
   async signup(payload: SignupPayload): Promise<SignupResponse> {
     const res = await apiClient.post<ApiResponse<SignupResponse>>(
       "/auth/signup",
@@ -28,7 +40,6 @@ const authApi = {
     return res.data.data!;
   },
 
-  // ================= LOGOUT =================
   async logout() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");

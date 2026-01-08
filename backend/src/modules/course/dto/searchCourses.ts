@@ -1,10 +1,21 @@
 import { z } from "zod";
-import { paginationQuerySchema } from "@/utils/zod";
+import { paginationQuerySchema, Pagination } from "@/utils/zod";
+import { ICourse } from "@/interfaces/course";
 
-export const SearchCoursesSchema = paginationQuerySchema.extend({
-  sortBy: z.enum(["name", "code", "createdAt"]).default("name"),
-  order: z.enum(["asc", "desc"]).default("desc"),
-});
+export const SearchCoursesSchema = paginationQuerySchema
+  .extend({
+    sortBy: z.enum(["name", "code", "createdAt"]).default("name"),
+  })
+  .strict();
 
-// --- TypeScript type từ Zod ---
 export type SearchCoursesInput = z.infer<typeof SearchCoursesSchema>;
+
+export interface CourseWithStats extends ICourse {
+  total_classes?: number;
+  active_classes?: number;
+}
+
+export interface SearchCoursesResponse {
+  courses: CourseWithStats[];
+  pagination: Pagination;
+}

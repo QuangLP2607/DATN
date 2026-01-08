@@ -9,7 +9,6 @@ const scheduleSchema = new Schema<ISchedule>(
       required: true,
       index: true,
     },
-
     day_of_week: {
       type: String,
       enum: [
@@ -23,27 +22,10 @@ const scheduleSchema = new Schema<ISchedule>(
       ],
       required: true,
     },
-
     // minutes from 00:00
-    start_time: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 1439,
-    },
-
-    end_time: {
-      type: Number,
-      required: true,
-      min: 1,
-      max: 1440,
-    },
-
-    note: {
-      type: String,
-      trim: true,
-      maxlength: 255,
-    },
+    start_time: { type: Number, required: true, min: 0, max: 1439 },
+    end_time: { type: Number, required: true, min: 1, max: 1440 },
+    note: { type: String, trim: true, maxlength: 255 },
   },
   { timestamps: true }
 );

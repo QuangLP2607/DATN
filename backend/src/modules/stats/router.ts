@@ -1,13 +1,22 @@
 import { Router } from "express";
-import { getStudentsByMonth, getStudentsPerCourse } from "./controller";
+import Controller from "./controller";
 import { authMiddleware } from "@/middlewares/auth";
+import { roleMiddleware } from "@/middlewares/role";
 
 const router = Router();
 
-// GET /stats/students/monthly
-router.get("/students/monthly", authMiddleware, getStudentsByMonth);
+router.get(
+  "/overview",
+  authMiddleware,
+  roleMiddleware(["ADMIN"]),
+  Controller.getOverview
+);
 
-// GET /stats/courses/students
-router.get("/courses/students", authMiddleware, getStudentsPerCourse);
+router.get(
+  "/students-enrollment",
+  authMiddleware,
+  roleMiddleware(["ADMIN"]),
+  Controller.getStudentEnrollments
+);
 
 export default router;

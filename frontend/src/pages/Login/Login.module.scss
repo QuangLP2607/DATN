@@ -1,8 +1,11 @@
-.login {
-  @include mixins.flex(column, center, center);
-  padding: 20px;
-  background: linear-gradient(45deg, white, var(--color-accent-primary));
+@use "@/styles" as *;
 
+.login {
+  @include flex(column, center, center);
+  padding: 10px;
+  background: linear-gradient(135deg, color(bg-default), color(primary-subtle));
+
+  box-sizing: border-box;
   // Background pattern
   &::before {
     position: absolute;
@@ -17,17 +20,42 @@
     content: "";
   }
 
-  &-form {
+  &__form {
+    width: 100%;
+    max-width: 900px;
     z-index: 1;
     display: flex;
     border-radius: 12px;
-    box-shadow: var(--color-shadow-sm);
+    box-shadow: var(--shadow-lg);
     overflow: hidden;
+
+    &-left {
+      width: 50%;
+    }
+
+    &-right {
+      width: 50%;
+    }
+  }
+
+  &__theme {
+    position: absolute;
+    top: 20px;
+    right: 20px;
   }
 }
 
-@media (max-width: 1000px) {
-  .left-slide {
-    display: none;
+@include respond-to(tablet) {
+  .login__form {
+    width: 100%;
+    max-width: 400px;
+
+    &-left {
+      display: none;
+    }
+
+    &-right {
+      width: 100%;
+    }
   }
 }

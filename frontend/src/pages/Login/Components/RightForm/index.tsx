@@ -1,18 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 import styles from "./RightForm.module.scss";
 import logoIcon from "@/assets/logo/logo-icon.png";
 import logoText from "@/assets/logo/logo-text.png";
 import { useAuth } from "@/hooks/useAuth";
-import type { LoginPayload } from "@/interfaces/auth";
-import authApi from "@/services/authService";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import authApi, { type LoginPayload } from "@/services/authService";
+import { Icon } from "@iconify/react";
 
 const cx = classNames.bind(styles);
 
 const RightForm = () => {
-  const navigate = useNavigate();
   const { login: contextLogin } = useAuth();
 
   const [formData, setFormData] = useState<LoginPayload>({
@@ -20,34 +17,38 @@ const RightForm = () => {
     password: "",
   });
 
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     setErrorMessage("");
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  /** SUBMIT FORM */
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (loading) return;
+
+    setLoading(true);
+    setErrorMessage("");
 
     try {
       const res = await authApi.login(formData);
       await contextLogin(res.accessToken, res.role);
-      navigate("/home");
     } catch {
       setErrorMessage("Tài khoản hoặc mật khẩu không đúng.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className={cx("right")}>
       <form className={cx("form")} onSubmit={handleSubmit}>
+        {/* LOGO */}
         <div className={cx("form__logo")}>
           <img
             src={logoIcon}
@@ -63,6 +64,7 @@ const RightForm = () => {
 
         <h2 className={cx("form__title")}>Chào mừng đến với JPedu</h2>
 
+        {/* EMAIL */}
         <input
           name="email"
           value={formData.email}
@@ -74,22 +76,37 @@ const RightForm = () => {
           required
         />
 
-        <input
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          className={cx("form__input")}
-          placeholder="Password"
-          type="password"
-          autoComplete="current-password"
-          required
-        />
+        {/* PASSWORD */}
+        <div className={cx("form__password")}>
+          <input
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className={cx("form__input")}
+            placeholder="Password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            required
+          />
+
+          <button
+            type="button"
+            className={cx("form__password-toggle")}
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+          >
+            <Icon icon={showPassword ? "mdi:eye-off" : "mdi:eye"} />
+          </button>
+        </div>
+
         <div className={cx("form__forgot")}>Quên mật khẩu?</div>
 
+        {/* ERROR */}
         {errorMessage && <p className={cx("form__error")}>{errorMessage}</p>}
 
-        <button className={cx("form__btn")} type="submit">
-          Đăng nhập
+        {/* LOGIN BUTTON */}
+        <button className={cx("form__btn")} type="submit" disabled={loading}>
+          {loading ? "Đang đăng nhập..." : "Đăng nhập"}
         </button>
 
         <div className={cx("form__or")}>or</div>

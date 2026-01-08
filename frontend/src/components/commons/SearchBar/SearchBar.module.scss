@@ -1,44 +1,37 @@
+@use "@/styles" as *;
+
 .search-bar {
-  display: flex;
-  align-items: center;
-  height: 40px;
-  border: 1px solid var(--color-primary);
-  border-radius: 5px;
-  overflow: hidden;
+  @include input-base(medium, small);
+  border: 1px solid color(border-default);
+
+  &.active {
+    border-color: color(primary-solid);
+  }
 
   &__input {
+    min-width: 0;
     flex: 1;
-    height: 100%;
-    padding: 0 10px;
     border: none;
-    background-color: var(--color-bg);
-    color: var(--color-text);
-    font-size: 14px;
-    cursor: text;
-    outline: none;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   &__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    background-color: var(--color-primary);
-    color: var(--color-bg);
-    font-size: 2rem;
-    cursor: pointer;
-    aspect-ratio: 1;
-    user-select: none;
+    display: grid;
+    place-items: center;
+    color: color(text-placeholder);
+    transition: all 0.2s ease;
 
     &:hover {
-      font-size: 2.2rem;
+      color: color(primary-solid);
+      transform: scale(1.1);
+      cursor: pointer;
     }
 
-    &:active {
-      font-size: 2rem;
+    .search-bar.active & {
+      color: color(primary-solid);
     }
   }
-}
-.search-bar__input::placeholder {
-  color: #999;
 }

@@ -32,8 +32,9 @@ export function PublicRoute({ element }: PublicRouteProps) {
 
   if (isSignedIn && user) {
     if (user.role === "STUDENT") return <Navigate to="/home" replace />;
-    if (user.role === "TEACHER") return <Navigate to="/teacher/home" replace />;
-    if (user.role === "ADMIN") return <Navigate to="/admin/home" replace />;
+    if (user.role === "TEACHER")
+      return <Navigate to="/teaching/home" replace />;
+    if (user.role === "ADMIN") return <Navigate to="/dashboard/home" replace />;
   }
 
   return element;
