@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
-import { MessageMediaModel } from "@/models/MessageMedia";
-import { IMedia } from "@/interfaces/media";
-import { fetchS3Url } from "@/utils/s3UrlCache";
+import { MessageMediaModel } from "../../../models/MessageMedia";
+import { IMedia } from "../../../interfaces/media";
+import { fetchS3Url } from "../../../utils/s3UrlCache";
 import { MessageMediaDTO } from "../dto";
 
 const mediaService = {

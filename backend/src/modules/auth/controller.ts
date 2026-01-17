@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { Res } from "@/core/response";
+import { Res } from "../../core/response";
 import Service from "./service";
-import { refreshAccessToken } from "@/services/jwt";
+import { refreshAccessToken } from "../../services/jwt";
 import ms from "ms";
 
 export default {

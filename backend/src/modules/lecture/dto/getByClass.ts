@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { paginationQuerySchema, Pagination } from "@/utils/zod";
-import { IMedia } from "@/interfaces/media";
-import { ILectureVideo } from "@/interfaces/lectureVideo";
+import { paginationQuerySchema, Pagination } from "../../../utils/zod";
+import { IMedia } from "../../../interfaces/media";
+import { ILectureVideo } from "../../../interfaces/lectureVideo";
 
 export const GetByClassSchema = paginationQuerySchema
   .extend({

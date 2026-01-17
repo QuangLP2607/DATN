@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { Res } from "@/core/response";
-import { Role } from "@/interfaces/user";
+import { Res } from "../core/response";
+import { Role } from "../interfaces/user";
 
 export const roleMiddleware = (allowedRoles: Role[]) => {
   return (req: Request, res: Response, next: NextFunction) => {

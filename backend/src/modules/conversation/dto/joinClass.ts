@@ -1,4 +1,4 @@
-import { IUserBase } from "@/interfaces/user";
+import { IUserBase } from "../../../interfaces/user";
 
 export type JoinClassMemberDTO = Pick<
   IUserBase,

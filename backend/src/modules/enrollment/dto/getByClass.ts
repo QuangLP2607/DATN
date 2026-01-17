@@ -1,5 +1,5 @@
-import { IStudent } from "@/interfaces/user";
-import { IEnrollment } from "@/interfaces/enrollment";
+import { IStudent } from "../../../interfaces/user";
+import { IEnrollment } from "../../../interfaces/enrollment";
 
 export interface EnrollmentWithStudent
   extends Pick<IEnrollment, "id" | "enrolled_at"> {

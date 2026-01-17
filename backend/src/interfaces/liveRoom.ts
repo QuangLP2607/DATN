@@ -3,12 +3,11 @@ import { Types } from "mongoose";
 export interface ILiveRoom {
   id?: string;
   name: string;
-  classId: string;
-  createdBy: Types.ObjectId;
+  class_id: Types.ObjectId;
+  created_by: Types.ObjectId;
   status: "OPEN" | "CLOSED";
-  startedAt: Date;
-  endedAt?: Date;
+  started_at: Date;
+  ended_at?: Date;
   participants: Types.ObjectId[];
-  teacherOnline?: boolean;
-  lastSeenTeacher?: Date;
+  last_seen_teacher?: Date;
 }

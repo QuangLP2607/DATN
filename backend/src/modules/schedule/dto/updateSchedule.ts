@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { timeStringSchema } from "@/utils/zod";
+import { timeStringSchema } from "../../../utils/zod";
 
 export const UpdateScheduleSchema = z
   .object({

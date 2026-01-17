@@ -1,9 +1,13 @@
 import { z } from "zod";
-import { paginationQuerySchema, Pagination, isoDateSchema } from "@/utils/zod";
-import { ClassStatuses } from "@/interfaces/class";
-import { IClass } from "@/interfaces/class";
-import { ITeacher } from "@/interfaces/user";
-import { ICourse } from "@/interfaces/course";
+import {
+  paginationQuerySchema,
+  Pagination,
+  isoDateSchema,
+} from "../../../utils/zod";
+import { ClassStatuses } from "../../../interfaces/class";
+import { IClass } from "../../../interfaces/class";
+import { ITeacher } from "../../../interfaces/user";
+import { ICourse } from "../../../interfaces/course";
 
 export const SearchClassesSchema = paginationQuerySchema
   .extend({

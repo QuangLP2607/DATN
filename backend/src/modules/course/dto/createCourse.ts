@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { stringSchema } from "@/utils/zod";
+import { stringSchema } from "../../../utils/zod";
 
 export const CreateCourseSchema = z
   .object({

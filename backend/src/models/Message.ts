@@ -1,5 +1,5 @@
 import { Schema, model, Model } from "mongoose";
-import { IMessage } from "@/interfaces/message";
+import { IMessage } from "../interfaces/message";
 
 const messageSchema = new Schema<IMessage>(
   {
@@ -7,7 +7,6 @@ const messageSchema = new Schema<IMessage>(
       type: Schema.Types.ObjectId,
       ref: "Conversation",
       required: true,
-      index: true,
     },
 
     sender_id: {
@@ -36,7 +35,6 @@ const messageSchema = new Schema<IMessage>(
     reply_to: {
       type: Schema.Types.ObjectId,
       ref: "Message",
-      index: true,
     },
 
     is_deleted: {
@@ -50,6 +48,9 @@ const messageSchema = new Schema<IMessage>(
   { timestamps: true }
 );
 
+/**
+ * Load messages in a conversation (newest first)
+ */
 messageSchema.index({ conversation_id: 1, createdAt: -1 });
 
 export const MessageModel: Model<IMessage> = model<IMessage>(

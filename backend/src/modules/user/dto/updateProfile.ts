@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { Role, IAdmin, IStudent, ITeacher } from "@/interfaces/user";
+import { Role, IAdmin, IStudent, ITeacher } from "../../../interfaces/user";
 import {
   objectIdSchema,
   stringSchema,
   usernameSchema,
   phoneSchema,
   isoDateSchema,
-} from "@/utils/zod";
+} from "../../../utils/zod";
 
 export const UpdateProfileSchema = z
   .object({

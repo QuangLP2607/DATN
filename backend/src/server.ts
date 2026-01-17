@@ -4,9 +4,9 @@ dotenv.config();
 import http from "http";
 import { Server } from "socket.io";
 
-import app from "@/app";
-import { connectDB } from "@/config/db";
-import { initChatSocket } from "@/socket/chat.socket";
+import app from "./app";
+import { connectDB } from "./config/db";
+import { initChatSocket } from "./socket/chat.socket";
 
 const PORT = Number(process.env.PORT || 5000);
 

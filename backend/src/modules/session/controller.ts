@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Res } from "@/core/response";
+import { Res } from "../../core/response";
 import Service from "./service";
 
 export default {

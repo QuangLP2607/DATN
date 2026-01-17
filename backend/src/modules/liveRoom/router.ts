@@ -1,11 +1,11 @@
 import express from "express";
 import Controller from "./controller";
-import { authMiddleware } from "@/middlewares/auth";
-import { validateZod } from "@/middlewares/validateZod";
-import { roleMiddleware } from "@/middlewares/role";
+import { authMiddleware } from "../../middlewares/auth";
+import { validateZod } from "../../middlewares/validateZod";
+import { roleMiddleware } from "../../middlewares/role";
 import { CreateLiveRoomSchema } from "./dto/create";
 import { JoinLiveRoomSchema } from "./dto/join";
-import { paramIdSchema } from "@/utils/zod";
+import { paramIdSchema } from "../../utils/zod";
 
 const router = express.Router();
 

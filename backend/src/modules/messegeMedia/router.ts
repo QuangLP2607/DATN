@@ -1,7 +1,7 @@
 import { Router } from "express";
 import Controller from "./controller";
-import { authMiddleware } from "@/middlewares/auth";
-import { validateZod } from "@/middlewares/validateZod";
+import { authMiddleware } from "../../middlewares/auth";
+import { validateZod } from "../../middlewares/validateZod";
 import { CreateMessageMediaSchema } from "./dto/create";
 import { DeleteMessageMediaSchema } from "./dto/delete";
 

@@ -1,10 +1,10 @@
-import AppError from "@/core/AppError";
-import { QuizModel } from "@/models/Quiz";
-import { ClassModel } from "@/models/Class";
-import { MediaModel } from "@/models/Media";
-import { normalizeMongo } from "@/utils/mongoNormalize";
+import AppError from "../../core/AppError";
+import { QuizModel } from "../../models/Quiz";
+import { ClassModel } from "../../models/Class";
+import { MediaModel } from "../../models/Media";
+import { normalizeMongo } from "../../utils/mongoNormalize";
 import { Types } from "mongoose";
-import { fetchS3Url } from "@/utils/s3UrlCache";
+import { fetchS3Url } from "../../utils/s3UrlCache";
 import {
   SearchQuizInput,
   SearchQuizResponse,

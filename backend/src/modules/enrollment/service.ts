@@ -1,12 +1,12 @@
-import AppError from "@/core/AppError";
-import { EnrollmentModel } from "@/models/Enrollment";
-import { ClassModel } from "@/models/Class";
-import { StudentModel } from "@/models/User";
-import { normalizeMongoList } from "@/utils/mongoNormalize";
+import AppError from "../../core/AppError";
+import { EnrollmentModel } from "../../models/Enrollment";
+import { ClassModel } from "../../models/Class";
+import { StudentModel } from "../../models/User";
+import { normalizeMongoList } from "../../utils/mongoNormalize";
 import { GetByClassResponse } from "./dto/getByClass";
 import { CreateEnrollmentInput } from "./dto/createEnrollment";
 import { Types } from "mongoose";
-import conversationService from "@/modules/conversation/services";
+import conversationService from "../../modules/conversation/services";
 
 export default {
   // -------------------- get my enrollments (student) --------------------

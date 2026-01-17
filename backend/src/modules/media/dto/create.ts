@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { stringSchema, mimeTypeSchema, fileSizeSchema } from "@/utils/zod";
+import {
+  stringSchema,
+  mimeTypeSchema,
+  fileSizeSchema,
+} from "../../../utils/zod";
 
 export const CreateMediaSchema = z
   .object({

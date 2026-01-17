@@ -77,15 +77,11 @@ const lectureVideoApi = {
 
   /* ---------- use cases ---------- */
 
-  /**
-   * Upload video + create lecture
-   * → trả về LectureWithUrls để FE dùng ngay
-   */
   async uploadLectureVideo(
     file: File,
     classId: string,
     onProgress?: (p: number) => void,
-    signal?: AbortSignal // 🔹
+    signal?: AbortSignal
   ): Promise<LectureRuntime> {
     const video = await mediaApi.uploadMedia(
       file,
@@ -96,7 +92,7 @@ const lectureVideoApi = {
         onProgress,
       },
       signal
-    ); // 🔹
+    );
 
     const lecture = await this.create({
       class_id: classId,

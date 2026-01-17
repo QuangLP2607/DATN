@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IEnrollment } from "@/interfaces/enrollment";
+import { IEnrollment } from "../interfaces/enrollment";
 
 const enrollmentSchema = new Schema<IEnrollment>(
   {
@@ -10,7 +10,14 @@ const enrollmentSchema = new Schema<IEnrollment>(
   { timestamps: true }
 );
 
-enrollmentSchema.index({ class_id: 1, student_id: 1 }, { unique: true });
+/**
+ * Unique enrollment per student per class
+ * background: true → index build không spam log
+ */
+enrollmentSchema.index(
+  { class_id: 1, student_id: 1 },
+  { unique: true, background: true }
+);
 
 export const EnrollmentModel = model<IEnrollment>(
   "Enrollment",

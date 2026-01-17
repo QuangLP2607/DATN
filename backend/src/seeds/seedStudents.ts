@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { StudentModel } from "@/models/User";
+import { StudentModel } from "../models/User";
 import {
   randomVietnameseName,
   generateUniqueUsername,

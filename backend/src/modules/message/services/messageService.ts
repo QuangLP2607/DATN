@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { MessageModel } from "@/models/Message";
+import { MessageModel } from "../../../models/Message";
 import { MessageDTO, MessageReplyDTO, MessageMediaDTO } from "../dto";
 import mediaService from "./mediaService";
 

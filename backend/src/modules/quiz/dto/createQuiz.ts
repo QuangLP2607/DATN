@@ -4,7 +4,7 @@ import {
   stringSchema,
   isoDateSchema,
   timeStringSchema,
-} from "@/utils/zod";
+} from "../../../utils/zod";
 
 export const CreateQuizSchema = z
   .object({

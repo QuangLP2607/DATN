@@ -1,7 +1,7 @@
-import AppError from "@/core/AppError";
-import { SessionModel } from "@/models/Session";
-import { ClassModel } from "@/models/Class";
-import { ScheduleModel } from "@/models/Schedule";
+import AppError from "../../core/AppError";
+import { SessionModel } from "../../models/Session";
+import { ClassModel } from "../../models/Class";
+import { ScheduleModel } from "../../models/Schedule";
 import { SearchSessionInput } from "./dto/searchSession";
 import { CreateSessionInput } from "./dto/createSession";
 import { UpdateSessionInput } from "./dto/updateSession";

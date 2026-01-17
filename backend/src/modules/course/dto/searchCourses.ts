@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { paginationQuerySchema, Pagination } from "@/utils/zod";
-import { ICourse } from "@/interfaces/course";
+import { paginationQuerySchema, Pagination } from "../../../utils/zod";
+import { ICourse } from "../../../interfaces/course";
 
 export const SearchCoursesSchema = paginationQuerySchema
   .extend({

@@ -1,5 +1,5 @@
-import { Schema, model, Types } from "mongoose";
-import { ISession } from "@/interfaces/session";
+import { Schema, model } from "mongoose";
+import { ISession } from "../interfaces/session";
 
 const sessionSchema = new Schema<ISession>(
   {
@@ -7,24 +7,50 @@ const sessionSchema = new Schema<ISession>(
       type: Schema.Types.ObjectId,
       ref: "Class",
       required: true,
-      index: true,
     },
+
     schedule_id: {
       type: Schema.Types.ObjectId,
       ref: "Schedule",
       required: true,
     },
-    week_number: { type: Number, required: true, min: 1 },
-    date: { type: Date, required: true, index: true },
-    start_time: { type: Number, required: true, min: 0, max: 1439 },
-    end_time: { type: Number, required: true, min: 1, max: 1440 },
+
+    week_number: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+
+    date: {
+      type: Date,
+      required: true,
+    },
+
+    start_time: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 1439,
+    },
+
+    end_time: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 1440,
+    },
+
     status: {
       type: String,
       enum: ["upcoming", "active", "finished", "cancelled"],
       default: "upcoming",
-      index: true,
     },
-    note: { type: String, trim: true, maxlength: 255 },
+
+    note: {
+      type: String,
+      trim: true,
+      maxlength: 255,
+    },
   },
   { timestamps: true }
 );
@@ -51,14 +77,15 @@ sessionSchema.pre("save", function (next) {
   if (this.status === "cancelled") return next();
 
   const now = new Date();
-  const sessionStart = new Date(this.date);
-  const sessionEnd = new Date(this.date);
 
+  const sessionStart = new Date(this.date);
   sessionStart.setHours(0, this.start_time, 0, 0);
+
+  const sessionEnd = new Date(this.date);
   sessionEnd.setHours(0, this.end_time, 0, 0);
 
   if (now < sessionStart) this.status = "upcoming";
-  else if (now >= sessionStart && now <= sessionEnd) this.status = "active";
+  else if (now <= sessionEnd) this.status = "active";
   else this.status = "finished";
 
   next();

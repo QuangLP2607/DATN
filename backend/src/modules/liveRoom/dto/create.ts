@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { objectIdSchema, stringSchema } from "@/utils/zod";
+import { objectIdSchema, stringSchema } from "../../../utils/zod";
 
 export const CreateLiveRoomSchema = z
   .object({
-    roomName: stringSchema("roomName", 3, 50),
-    classId: objectIdSchema,
+    room_name: stringSchema("roomName", 3, 50),
+    class_id: objectIdSchema,
   })
   .strict();
 

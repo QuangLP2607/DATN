@@ -1,7 +1,7 @@
-import { ClassModel } from "@/models/Class";
-import { CourseModel } from "@/models/Course";
-import { TeacherModel } from "@/models/User";
-import { ConversationModel } from "@/models/Conversation";
+import { ClassModel } from "../models/Class";
+import { CourseModel } from "../models/Course";
+import { TeacherModel } from "../models/User";
+import { ConversationModel } from "../models/Conversation";
 import { faker } from "@faker-js/faker";
 import { generateSchedule, getCourseDuration } from "./seed.helpers";
 

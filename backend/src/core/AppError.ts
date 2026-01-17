@@ -1,4 +1,4 @@
-import ResponseCode from "@/constants/responseCode";
+import ResponseCode from "../constants/responseCode";
 
 export default class AppError extends Error {
   statusCode: number;

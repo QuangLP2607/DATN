@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import logger from "@/core/logger";
-import { Res } from "@/core/response";
+import logger from "../core/logger";
+import { Res } from "../core/response";
 
 const notFoundHandler = (req: Request, res: Response) => {
   const timestamp = new Date().toISOString();

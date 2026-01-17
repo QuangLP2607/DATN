@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { ConversationReadModel } from "@/models/ConversationRead";
+import { ConversationReadModel } from "../../../models/ConversationRead";
 
 export default {
   markAsRead: async (

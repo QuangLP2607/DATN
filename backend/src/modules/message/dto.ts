@@ -1,6 +1,6 @@
-import { IMessage } from "@/interfaces/message";
-import { IMessageMedia } from "@/interfaces/messageMedia";
-import { IMessageReaction } from "@/interfaces/messageReaction";
+import { IMessage } from "../../interfaces/message";
+import { IMessageMedia } from "../../interfaces/messageMedia";
+import { IMessageReaction } from "../../interfaces/messageReaction";
 
 // reaction
 export type MessageReactionDTO = Pick<IMessageReaction, "emoji"> & {

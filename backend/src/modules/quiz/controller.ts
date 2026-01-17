@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { QuizService } from "./service";
-import { Res } from "@/core/response";
-import mediaService from "@/modules/media/service";
+import { Res } from "../../core/response";
+import mediaService from "../../modules/media/service";
 
 const service = new QuizService(mediaService.delete);
 

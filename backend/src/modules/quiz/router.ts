@@ -1,9 +1,9 @@
 import { Router } from "express";
 import Controller from "./controller";
-import { validateZod } from "@/middlewares/validateZod";
-import { authMiddleware } from "@/middlewares/auth";
-import { roleMiddleware } from "@/middlewares/role";
-import { paramIdSchema } from "@/utils/zod";
+import { validateZod } from "../../middlewares/validateZod";
+import { authMiddleware } from "../../middlewares/auth";
+import { roleMiddleware } from "../../middlewares/role";
+import { paramIdSchema } from "../../utils/zod";
 import { SearchQuizSchema } from "./dto/searchQuiz";
 import { CreateQuizSchema } from "./dto/createQuiz";
 import { CreateQuestionsSchema } from "./dto/createQuestions";
