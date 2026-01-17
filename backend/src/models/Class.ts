@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IClass } from "@/interfaces/class";
+import { IClass } from "../interfaces/class";
 import cron from "node-cron";
 
 /* ================= Schema ================= */

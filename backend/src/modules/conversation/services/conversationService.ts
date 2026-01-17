@@ -1,9 +1,9 @@
-import AppError from "@/core/AppError";
-import { ConversationModel } from "@/models/Conversation";
-import { ClassModel } from "@/models/Class";
-import { EnrollmentModel } from "@/models/Enrollment";
-import { MediaModel } from "@/models/Media";
-import { fetchS3Url } from "@/utils/s3UrlCache";
+import AppError from "../../../core/AppError";
+import { ConversationModel } from "../../../models/Conversation";
+import { ClassModel } from "../../../models/Class";
+import { EnrollmentModel } from "../../../models/Enrollment";
+import { MediaModel } from "../../../models/Media";
+import { fetchS3Url } from "../../../utils/s3UrlCache";
 import { JoinClassResponse } from "../dto/joinClass";
 import { Types } from "mongoose";
 

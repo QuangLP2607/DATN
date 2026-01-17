@@ -1,8 +1,8 @@
-import { ClassModel } from "@/models/Class";
-import { CourseModel } from "@/models/Course";
-import { StudentModel } from "@/models/User";
-import { TeacherModel } from "@/models/User";
-import { EnrollmentModel } from "@/models/Enrollment";
+import { ClassModel } from "../../models/Class";
+import { CourseModel } from "../../models/Course";
+import { StudentModel } from "../../models/User";
+import { TeacherModel } from "../../models/User";
+import { EnrollmentModel } from "../../models/Enrollment";
 import type {
   OverviewResponse,
   CourseStat,
@@ -10,8 +10,8 @@ import type {
   TeacherStatusStat,
   ClassStatusStat,
 } from "./dto/getOverview";
-import { JapaneseLevels } from "@/interfaces/user";
-import { TeacherStatuses } from "@/interfaces/user";
+import { JapaneseLevels } from "../../interfaces/user";
+import { TeacherStatuses } from "../../interfaces/user";
 // import {
 //   StudentsPerLevelResponse,
 //   StudentLevelStat,

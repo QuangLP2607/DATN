@@ -1,5 +1,5 @@
 import { Response } from "express";
-import ResponseCode from "@/constants/responseCode";
+import ResponseCode from "../constants/responseCode";
 
 type ResponseData<T> = {
   code: number;

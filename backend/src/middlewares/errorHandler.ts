@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import logger from "@/core/logger";
-import AppError from "@/core/AppError";
-import { Res } from "@/core/response";
-import ResponseCode from "@/constants/responseCode";
+import logger from "../core/logger";
+import AppError from "../core/AppError";
+import { Res } from "../core/response";
+import ResponseCode from "../constants/responseCode";
 
 const errorHandler = (
   err: any,

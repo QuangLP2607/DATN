@@ -1,5 +1,5 @@
 import { Schema, model, Model } from "mongoose";
-import { IMessageReaction } from "@/interfaces/messageReaction";
+import { IMessageReaction } from "../interfaces/messageReaction";
 
 const messageReactionSchema = new Schema<IMessageReaction>(
   {
@@ -7,14 +7,12 @@ const messageReactionSchema = new Schema<IMessageReaction>(
       type: Schema.Types.ObjectId,
       ref: "Message",
       required: true,
-      index: true,
     },
 
     user_id: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
 
     emoji: {
@@ -31,6 +29,9 @@ const messageReactionSchema = new Schema<IMessageReaction>(
   }
 );
 
+/**
+ * One user can react one emoji once per message
+ */
 messageReactionSchema.index(
   { message_id: 1, user_id: 1, emoji: 1 },
   { unique: true }

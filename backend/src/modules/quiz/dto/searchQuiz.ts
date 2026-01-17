@@ -1,6 +1,10 @@
 import { z } from "zod";
-import { paginationQuerySchema, objectIdSchema, Pagination } from "@/utils/zod";
-import { IQuiz, QUIZ_STATUSES } from "@/interfaces/quiz";
+import {
+  paginationQuerySchema,
+  objectIdSchema,
+  Pagination,
+} from "../../../utils/zod";
+import { IQuiz, QUIZ_STATUSES } from "../../../interfaces/quiz";
 
 export const quizStatusEnum = z.enum(QUIZ_STATUSES);
 

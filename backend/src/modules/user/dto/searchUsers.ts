@@ -4,9 +4,9 @@ import {
   Role,
   TeacherStatuses,
   JapaneseLevels,
-} from "@/interfaces/user";
-import { paginationQuerySchema, Pagination } from "@/utils/zod";
-import { IUserBase } from "@/interfaces/user";
+} from "../../../interfaces/user";
+import { paginationQuerySchema, Pagination } from "../../../utils/zod";
+import { IUserBase } from "../../../interfaces/user";
 
 const roleEnum = z.enum(Object.keys(Roles) as [Role, ...Role[]]);
 

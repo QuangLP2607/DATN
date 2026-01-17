@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { QUIZ_STATUSES } from "@/interfaces/quiz";
+import { QUIZ_STATUSES } from "../../../interfaces/quiz";
 
 export const UpdateQuizSchema = z.object({
   title: z.string().min(1).optional(),

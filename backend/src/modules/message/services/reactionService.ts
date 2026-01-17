@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { MessageReactionModel } from "@/models/MessageReaction";
+import { MessageReactionModel } from "../../../models/MessageReaction";
 
 export default {
   reactMessage: async (message_id: string, user_id: string, emoji: string) => {

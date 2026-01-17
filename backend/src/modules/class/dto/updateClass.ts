@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { objectIdSchema, stringSchema, isoDateSchema } from "@/utils/zod";
+import {
+  objectIdSchema,
+  stringSchema,
+  isoDateSchema,
+} from "../../../utils/zod";
 
 export const UpdateClassSchema = z
   .object({

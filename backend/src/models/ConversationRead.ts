@@ -1,5 +1,5 @@
 import { Schema, model, Model } from "mongoose";
-import { IConversationRead } from "@/interfaces/conversationRead";
+import { IConversationRead } from "../interfaces/conversationRead";
 
 const conversationReadSchema = new Schema<IConversationRead>(
   {
@@ -33,7 +33,7 @@ const conversationReadSchema = new Schema<IConversationRead>(
 
 conversationReadSchema.index(
   { conversation_id: 1, user_id: 1 },
-  { unique: true }
+  { unique: true, background: true }
 );
 
 export const ConversationReadModel: Model<IConversationRead> =

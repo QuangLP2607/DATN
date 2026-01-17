@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { emailSchema, passwordSchema } from "@/utils/zod";
+import { emailSchema, passwordSchema } from "../../../utils/zod";
 
 export const LoginSchema = z
   .object({

@@ -1,5 +1,5 @@
 import { Schema, model, Model } from "mongoose";
-import { IConversation } from "@/interfaces/conversation";
+import { IConversation } from "../interfaces/conversation";
 
 const conversationSchema = new Schema<IConversation>(
   {
@@ -22,7 +22,7 @@ const conversationSchema = new Schema<IConversation>(
   { timestamps: true }
 );
 
-conversationSchema.index({ class_id: 1 }, { unique: true });
+conversationSchema.index({ class_id: 1 }, { unique: true, background: true });
 
 export const ConversationModel: Model<IConversation> = model<IConversation>(
   "Conversation",

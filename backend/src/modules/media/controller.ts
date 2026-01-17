@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Service from "./service";
-import { Res } from "@/core/response";
+import { Res } from "../../core/response";
 
 export default {
   // -------------------- create upload url --------------------

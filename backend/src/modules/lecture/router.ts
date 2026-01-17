@@ -1,9 +1,9 @@
 import { Router } from "express";
 import Controller from "./controller";
-import { authMiddleware } from "@/middlewares/auth";
-import { roleMiddleware } from "@/middlewares/role";
-import { validateZod } from "@/middlewares/validateZod";
-import { paramIdSchema } from "@/utils/zod";
+import { authMiddleware } from "../../middlewares/auth";
+import { roleMiddleware } from "../../middlewares/role";
+import { validateZod } from "../../middlewares/validateZod";
+import { paramIdSchema } from "../../utils/zod";
 import { SaveSchema } from "./dto/create";
 import { UpdateSchema } from "./dto/update";
 import { GetByClassSchema } from "./dto/getByClass";

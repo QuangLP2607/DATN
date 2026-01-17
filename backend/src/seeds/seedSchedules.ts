@@ -1,5 +1,5 @@
-import { ClassModel } from "@/models/Class";
-import { ScheduleModel } from "@/models/Schedule";
+import { ClassModel } from "../models/Class";
+import { ScheduleModel } from "../models/Schedule";
 import { faker } from "@faker-js/faker";
 
 export default async function seedSchedules() {

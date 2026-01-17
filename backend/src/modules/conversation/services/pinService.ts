@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { ConversationPinModel } from "@/models/ConversationPin";
+import { ConversationPinModel } from "../../../models/ConversationPin";
 import {
   PinnedMessageDTO,
   LoadPinnedMessagesResponse,

@@ -1,7 +1,7 @@
-import AppError from "@/core/AppError";
-import { ScheduleModel } from "@/models/Schedule";
-import { ClassModel } from "@/models/Class";
-import { normalizeMongoList } from "@/utils/mongoNormalize";
+import AppError from "../../core/AppError";
+import { ScheduleModel } from "../../models/Schedule";
+import { ClassModel } from "../../models/Class";
+import { normalizeMongoList } from "../../utils/mongoNormalize";
 import {
   SearchScheduleInput,
   SearchScheduleResponse,

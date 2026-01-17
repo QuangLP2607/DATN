@@ -1,8 +1,8 @@
-import AppError from "@/core/AppError";
-import { UserModel } from "@/models/User";
-import { AuthUser } from "@/interfaces/user";
-import { generateTokens } from "@/services/jwt";
-import { getModelByRole } from "@/utils/getModelByRole";
+import AppError from "../../core/AppError";
+import { UserModel } from "../../models/User";
+import { AuthUser } from "../../interfaces/user";
+import { generateTokens } from "../../services/jwt";
+import { getModelByRole } from "../../utils/getModelByRole";
 import { LoginInput } from "./dto/login";
 import { SignupInput } from "./dto/signup";
 import bcrypt from "bcryptjs";

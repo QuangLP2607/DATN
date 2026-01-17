@@ -4,7 +4,7 @@ import {
   stringSchema,
   timeStringSchema,
   isoDateSchema,
-} from "@/utils/zod";
+} from "../../../utils/zod";
 
 export const CreateSessionSchema = z.object({
   schedule_id: objectIdSchema,

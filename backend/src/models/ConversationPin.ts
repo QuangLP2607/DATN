@@ -1,5 +1,5 @@
 import { Schema, model, Model } from "mongoose";
-import { IConversationPin } from "@/interfaces/conversationPin";
+import { IConversationPin } from "../interfaces/conversationPin";
 
 const conversationPinSchema = new Schema<IConversationPin>(
   {
@@ -28,7 +28,7 @@ const conversationPinSchema = new Schema<IConversationPin>(
 
 conversationPinSchema.index(
   { conversation_id: 1, message_id: 1 },
-  { unique: true }
+  { unique: true, background: true }
 );
 
 export const ConversationPinModel: Model<IConversationPin> =

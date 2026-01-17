@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Controller from "./controller";
-import { validateZod } from "@/middlewares/validateZod";
+import { validateZod } from "../../middlewares/validateZod";
 import { SignupSchema } from "./dto/signup";
 import { LoginSchema } from "./dto/login";
 

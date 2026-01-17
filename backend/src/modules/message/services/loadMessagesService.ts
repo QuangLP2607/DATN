@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
-import { MessageModel } from "@/models/Message";
-import { MessageMediaModel } from "@/models/MessageMedia";
-import { MessageReactionModel } from "@/models/MessageReaction";
-import { IMedia } from "@/interfaces/media";
-import { fetchS3Url } from "@/utils/s3UrlCache";
+import { MessageModel } from "../../../models/Message";
+import { MessageMediaModel } from "../../../models/MessageMedia";
+import { MessageReactionModel } from "../../../models/MessageReaction";
+import { IMedia } from "../../../interfaces/media";
+import { fetchS3Url } from "../../../utils/s3UrlCache";
 import {
   MessageDTO,
   MessageMediaDTO,

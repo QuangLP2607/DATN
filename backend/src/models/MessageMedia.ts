@@ -1,5 +1,5 @@
 import { Schema, model, Model } from "mongoose";
-import { IMessageMedia } from "@/interfaces/messageMedia";
+import { IMessageMedia } from "../interfaces/messageMedia";
 
 const messageMediaSchema = new Schema<IMessageMedia>(
   {

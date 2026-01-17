@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { objectIdSchema, isoDateSchema } from "@/utils/zod";
-import { ISchedule } from "@/interfaces/schedule";
-import { IClass } from "@/interfaces/class";
+import { objectIdSchema, isoDateSchema } from "../../../utils/zod";
+import { ISchedule } from "../../../interfaces/schedule";
+import { IClass } from "../../../interfaces/class";
 
 export const SearchScheduleSchema = z
   .object({

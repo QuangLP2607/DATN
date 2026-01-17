@@ -1,12 +1,12 @@
 import { Router } from "express";
 import Controller from "./controller";
-import { authMiddleware } from "@/middlewares/auth";
-import { roleMiddleware } from "@/middlewares/role";
-import { validateZod } from "@/middlewares/validateZod";
+import { authMiddleware } from "../../middlewares/auth";
+import { roleMiddleware } from "../../middlewares/role";
+import { validateZod } from "../../middlewares/validateZod";
 import { SearchScheduleSchema } from "./dto/searchSchedule";
 import { CreateScheduleSchema } from "./dto/createSchedule";
 import { UpdateScheduleSchema } from "./dto/updateSchedule";
-import { paramIdSchema } from "@/utils/zod";
+import { paramIdSchema } from "../../utils/zod";
 
 const router = Router();
 

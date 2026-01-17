@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { Res } from "@/core/response";
+import { Res } from "../../core/response";
 import { LectureVideoService } from "./service";
-import mediaService from "@/modules/media/service";
+import mediaService from "../../modules/media/service";
 
 const service = new LectureVideoService(mediaService.delete);
 

@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
-import messagesService from "@/modules/message/services";
-import conversationServices from "@/modules/conversation/services";
+import messagesService from "../modules/message/services";
+import conversationServices from "../modules/conversation/services";
 
 interface ClientPayload {
   conversation_id: string;

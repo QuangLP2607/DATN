@@ -3,12 +3,12 @@ import apiClient from "./apiClient";
 
 // ===== Types ================================================================
 export interface CreateRoomInput {
-  roomName: string;
-  classId: string;
+  room_name: string;
+  class_id: string;
 }
 
 export interface JoinRoomInput {
-  roomName: string;
+  room_name: string;
 }
 
 export interface LeaveRoomInput {

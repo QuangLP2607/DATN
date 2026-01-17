@@ -1,6 +1,6 @@
-import { EnrollmentModel } from "@/models/Enrollment";
-import { StudentModel } from "@/models/User";
-import { ClassModel } from "@/models/Class";
+import { EnrollmentModel } from "../models/Enrollment";
+import { StudentModel } from "../models/User";
+import { ClassModel } from "../models/Class";
 import { faker } from "@faker-js/faker";
 
 export default async function seedEnrollments(count: number) {

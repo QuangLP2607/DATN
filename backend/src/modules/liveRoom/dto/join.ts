@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { stringSchema } from "@/utils/zod";
+import { stringSchema } from "../../../utils/zod";
 
 export const JoinLiveRoomSchema = z
   .object({
-    roomName: stringSchema("roomName", 3, 50),
+    room_name: stringSchema("roomName", 3, 50),
   })
   .strict();
 

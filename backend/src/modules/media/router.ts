@@ -1,10 +1,10 @@
 import { Router } from "express";
 import Controller from "./controller";
-import { authMiddleware } from "@/middlewares/auth";
-import { roleMiddleware } from "@/middlewares/role";
-import { validateZod } from "@/middlewares/validateZod";
+import { authMiddleware } from "../../middlewares/auth";
+import { roleMiddleware } from "../../middlewares/role";
+import { validateZod } from "../../middlewares/validateZod";
 import { CreateUploadUrlSchema } from "./dto/createUploadUrl";
-import { paramIdSchema } from "@/utils/zod";
+import { paramIdSchema } from "../../utils/zod";
 import { CreateMediaSchema } from "./dto/create";
 import { UpdateMediaSchema } from "./dto/update";
 

@@ -1,4 +1,4 @@
-import { CourseModel } from "@/models/Course";
+import { CourseModel } from "../models/Course";
 
 export default async function seedCourses() {
   const courses = [

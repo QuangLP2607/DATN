@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { objectIdSchema, mimeTypeSchema } from "@/utils/zod";
+import { objectIdSchema, mimeTypeSchema } from "../../../utils/zod";
 
 export const UploadPurpose = [
   "lecture/video",

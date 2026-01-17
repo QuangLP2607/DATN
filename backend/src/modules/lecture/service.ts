@@ -1,8 +1,8 @@
-import AppError from "@/core/AppError";
-import { LectureVideoModel } from "@/models/LectureVideo";
-import { ClassModel } from "@/models/Class";
-import { normalizeMongoDoc } from "@/utils/mongoNormalize";
-import { fetchS3Url } from "@/utils/s3UrlCache";
+import AppError from "../../core/AppError";
+import { LectureVideoModel } from "../../models/LectureVideo";
+import { ClassModel } from "../../models/Class";
+import { normalizeMongoDoc } from "../../utils/mongoNormalize";
+import { fetchS3Url } from "../../utils/s3UrlCache";
 import { SaveInput } from "./dto/create";
 import { UpdateInput } from "./dto/update";
 import { GetByClassInput, GetByClassResponse } from "./dto/getByClass";

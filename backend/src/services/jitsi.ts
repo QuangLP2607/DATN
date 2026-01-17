@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Role } from "@/interfaces/user";
+import { Role } from "../interfaces/user";
 
 export interface JitsiUser {
   _id: string;

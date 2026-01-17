@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import jitsiApi, { type JitsiRoomResponse } from "@/services/jitsiService";
 
-export function useJitsiRoom(roomName: string, classId: string) {
+export function useJitsiRoom(room_name: string, class_id: string) {
   const [roomData, setRoomData] = useState<JitsiRoomResponse | null>(null);
   const roomRef = useRef<JitsiRoomResponse | null>(null);
   const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!roomName || !classId) return;
+    if (!room_name || !class_id) return;
     let mounted = true;
 
     const init = async () => {
       try {
-        const res = await jitsiApi.createRoom({ roomName, classId });
+        const res = await jitsiApi.createRoom({ room_name, class_id });
         if (!mounted) return;
         setRoomData(res);
         roomRef.current = res;
@@ -26,7 +26,7 @@ export function useJitsiRoom(roomName: string, classId: string) {
     return () => {
       mounted = false;
     };
-  }, [roomName, classId]);
+  }, [room_name, class_id]);
 
   useEffect(() => {
     if (!roomRef.current) return;
@@ -53,7 +53,7 @@ export function useJitsiRoom(roomName: string, classId: string) {
       if (roomRef.current)
         jitsiApi.leaveRoom({ roomId: roomRef.current.roomId });
     };
-  }, []); // dependency rỗng, không gây tạo room 2 lần
+  }, []);
 
   return {
     roomData,

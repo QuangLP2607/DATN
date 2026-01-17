@@ -1,7 +1,10 @@
-import AppError from "@/core/AppError";
-import { CourseModel } from "@/models/Course";
-import { ClassModel } from "@/models/Class";
-import { normalizeMongoList, normalizeMongoDoc } from "@/utils/mongoNormalize";
+import AppError from "../../core/AppError";
+import { CourseModel } from "../../models/Course";
+import { ClassModel } from "../../models/Class";
+import {
+  normalizeMongoList,
+  normalizeMongoDoc,
+} from "../../utils/mongoNormalize";
 import {
   SearchCoursesInput,
   SearchCoursesResponse,

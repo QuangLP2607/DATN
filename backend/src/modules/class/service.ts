@@ -1,11 +1,10 @@
-import AppError from "@/core/AppError";
-import { ClassModel } from "@/models/Class";
-import { CourseModel } from "@/models/Course";
-import { ConversationModel } from "@/models/Conversation";
-import { EnrollmentModel } from "@/models/Enrollment";
-import { AuthUser, ITeacher } from "@/interfaces/user";
-import { ICourse } from "@/interfaces/course";
-import { normalizeMongoList } from "@/utils/mongoNormalize";
+import AppError from "../../core/AppError";
+import { ClassModel } from "../../models/Class";
+import { CourseModel } from "../../models/Course";
+import { ConversationModel } from "../../models/Conversation";
+import { EnrollmentModel } from "../../models/Enrollment";
+import { AuthUser } from "../../interfaces/user";
+import { normalizeMongoList } from "../../utils/mongoNormalize";
 import {
   SearchClassesInput,
   SearchClassesResponse,
@@ -14,7 +13,7 @@ import {
 import { CreateClassInput } from "./dto/createClass";
 import { UpdateClassInput } from "./dto/updateClass";
 import { AddTeachersInput } from "./dto/addTeacher";
-import conversationService from "@/modules/conversation/services";
+import conversationService from "../../modules/conversation/services";
 import { Types } from "mongoose";
 
 export default {

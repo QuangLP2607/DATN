@@ -1,10 +1,10 @@
-import AppError from "@/core/AppError";
+import AppError from "../../core/AppError";
 import { Types } from "mongoose";
-import { MessageMediaModel } from "@/models/MessageMedia";
-import { MediaModel } from "@/models/Media";
+import { MessageMediaModel } from "../../models/MessageMedia";
+import { MediaModel } from "../../models/Media";
 import { CreateMessageMediaInput } from "./dto/create";
 import { DeleteMessageMediaInput } from "./dto/delete";
-import s3 from "@/config/s3";
+import s3 from "../../config/s3";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 const BUCKET = process.env.AWS_BUCKET_NAME!;
